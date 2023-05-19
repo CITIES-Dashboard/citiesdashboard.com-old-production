@@ -1,2 +1,1 @@
-# citiesdashboard.com
-Repo for CITIES Dashboard website
+# Repo for CITIESdashboard.com website
