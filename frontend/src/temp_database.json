@@ -128,13 +128,38 @@
           {
             "gid": 184715989,
             "subchartTitle": "Hourly (Last 30 Days)",
-            "subchartSubtitle": "Explore the <b>latest</b> hourly average AQI over the past month to see the differences in the air quality between different locations on the NYUAD campus.<br><br><b>Adjust the slider to zoom in.</b>",
+            "subchartSubtitle": "<b>Adjust the slider to zoom in.</b><br><br>Explore the <b>latest</b> hourly average AQI over the past month to see the differences in the air quality between different locations on the NYUAD campus.",
             "options": {
               "hAxis": {
                 "title": "Date Time"
               }
             },
-            "filter": "ChartRangeFilter"
+            "control": {
+              "mobile": {
+                "controlType": "DateRangeFilter",
+                "controlPosition": "bottom",
+                "options": {
+                  "filterColumnIndex": 0,
+                  "ui": {
+                    "format": {
+                      "pattern": "MMM dd"
+                    },
+                    "step": "day",
+                    "label": ""
+                  }
+                }
+              },
+              "desktop": {
+                "controlType": "ChartRangeFilter",
+                "controlPosition": "bottom",
+                "options": {
+                  "filterColumnIndex": 0,
+                  "ui": {
+                    "minRangeSize": 86400000
+                  }
+                }
+              }
+            }
           },
           {
             "gid": 2066975752,
@@ -216,17 +241,21 @@
         "title": "Daily AQI, All Time",
         "subcharts": [
           {
-            "query": "SELECT A, C",
+            "query": "SELECT A, C, D",
             "subchartTitle": "Outdoor"
           },
           {
-            "query": "SELECT A, H",
+            "query": "SELECT A, H, I",
             "subchartTitle": "Campus Center"
           },
           {
-            "query": "SELECT A, M",
+            "query": "SELECT A, M, N",
             "subchartTitle": "Dining Hall D2"
           }
+        ],
+        "columns": [
+          0,
+          1
         ],
         "subtitle": "This calendar chart shows how the daily AQI varies throughout the year across different locations of the air quality network. Each square cell represents one day and its color corresponds to the category of the AQI. Hover over each square cell to see the specific date and its average AQI.<br><br><small><b>Note: </b>There were some gaps in our data collection. Dates where there was no recorded data are represented by empty cells.</small>",
         "gid": 584789045,
@@ -238,6 +267,17 @@
           },
           "legend": {
             "position": "none"
+          }
+        },
+        "control": {
+          "controlType": "CategoryFilter",
+          "options": {
+            "filterColumnIndex": 2,
+            "ui": {
+              "label": "Filter by AQI Category:",
+              "allowTyping": false,
+              "allowMultiple": true
+            }
           }
         }
       },
@@ -900,8 +940,8 @@
           {
             "gid": 1409006115,
             "subchartTitle": "Total (3 meals)",
-            "subchartSubtitle": "From this visualization of average daily food waste by month, it is evident that the absolute amount of food waste is on the rise. This might be due to several factors:<ul><li>The loosening of COVID restrictions in 2022, which allowed more people to come back to campus</li><li>An absolute increase in the number of people eating at D2 as the student population increases year-by-year</li><li>Operational changes during the hand-over period between the catering providers (ADNH: prior to July 2022, RCS: after July 2022)</li></ul><b>Adjust the slider to zoom in.</b>",
-            "query": "SELECT C, D, F, G, H, I WHERE A IS NOT NULL",
+            "subchartSubtitle": "<b>Adjust the slider to zoom in.</b><br><br>From this visualization of average daily food waste by month, it is evident that the absolute amount of food waste is on the rise. This might be due to several factors:<ul><li>The loosening of COVID restrictions in 2022, which allowed more people to come back to campus</li><li>An absolute increase in the number of people eating at D2 as the student population increases year-by-year</li><li>Operational changes during the hand-over period between the catering providers (ADNH: prior to July 2022, RCS: after July 2022)</li></ul>",
+            "query": "SELECT C, E, G, H, I, J WHERE A IS NOT NULL",
             "columns": [
               0,
               1,
@@ -973,7 +1013,17 @@
         ],
         "options": {
           "hAxis": {
-            "title": "Month - Year (hover on the line chart to see week number)"
+            "title": "Month - Year (hover on the line chart to see week number)",
+            "gridlines": {
+              "units": {
+                "months": {
+                  "format": "MMM YYYY"
+                }
+              }
+            },
+            "minorGridlines": {
+              "count": 0
+            }
           },
           "vAxis": {
             "title": "Food Waste (in Kilogram)",
@@ -988,7 +1038,31 @@
             "style": "area"
           }
         },
-        "filter": "ChartRangeFilter"
+        "control": {
+          "mobile": {
+            "controlType": "DateRangeFilter",
+            "controlPosition": "bottom",
+            "options": {
+              "filterColumnIndex": 0,
+              "ui": {
+                "format": {
+                  "pattern": "MMM yyyy"
+                },
+                "label": ""
+              }
+            }
+          },
+          "desktop": {
+            "controlType": "ChartRangeFilter",
+            "controlPosition": "bottom",
+            "options": {
+              "filterColumnIndex": 0,
+              "ui": {
+                "minRangeSize": 31536000000
+              }
+            }
+          }
+        }
       },
       {
         "title": "Historical Daily Food Waste (kg)",
