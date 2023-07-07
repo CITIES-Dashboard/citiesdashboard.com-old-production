@@ -1,14 +1,12 @@
-// disable eslint for this file
-/* eslint-disable */
-import { useState } from 'react';
+import { useState, memo } from 'react';
 import { Chart } from 'react-google-charts';
 import { isMobile } from 'react-device-detect';
 import { Box, CircularProgress } from '@mui/material/';
 
+import { useTheme } from '@mui/material/styles';
+import isEqual from 'lodash.isequal';
 import HeatMap from './HeatMap';
 import CalendarChart from './ResponsiveCalendarChart';
-
-import { useTheme } from '@mui/material/styles';
 
 const chartFilterHeightInPixel = 50;
 
@@ -22,17 +20,22 @@ const hideAnnotations = {
   boxStyle: null,
 };
 
+function SubChart({ chartData, chartSubIndex, windowSize, isPortrait, isHomepage }) {
+  // Get the current theme
+  const theme = useTheme();
 
-const SubChart = ({ chartData, chartSubIndex, isPortrait, isHomepage }) => {
+  // Show CircleProgress or not
+  const [circleProgress, displayCircleProgress] = useState(true);
+
   // Early return if the chartType is HeatMap
-  if (chartData.chartType === 'HeatMap')
+  if (chartData.chartType === 'HeatMap') {
     return (
       <Box
-        position={'relative'}
+        position="relative"
         className={chartData.chartType}
         height={chartData.height}
         maxWidth={chartData.maxWidth ? chartData.maxWidth : '100%'}
-        width={'100%'}
+        width="100%"
         sx={{ pt: 2, pb: 2, margin: 'auto' }}
       >
         <HeatMap
@@ -41,17 +44,10 @@ const SubChart = ({ chartData, chartSubIndex, isPortrait, isHomepage }) => {
           range={
             chartData.range || chartData.subcharts[chartSubIndex].range || null
           }
-          height={chartData.height}
         />
       </Box>
     );
-
-  // ------------ FOR ALL OTHER CHART TYPES -------------
-  // Get the current theme
-  const theme = useTheme();
-
-  // Show CircleProgress or not
-  let [circleProgress, displayCircleProgress] = useState(true);
+  }
 
   // Options object for the chart
   let options = {};
@@ -72,12 +68,12 @@ const SubChart = ({ chartData, chartSubIndex, isPortrait, isHomepage }) => {
 
   // Properties for chart control (if existed)
   let showControl = false;
-  const deviceType = isMobile ? "mobile" : "desktop";
+  const deviceType = isMobile ? 'mobile' : 'desktop';
   // Only show the chart control if:
   // It exists in the database (either for all subcharts or just for a particular subchart)
   // And if the chart is currently not shown on homePage
   let chartControl = chartData.control || chartData.subcharts?.[chartSubIndex].control;
-  if (chartControl && (isHomepage != true)) {
+  if (chartControl && (isHomepage !== true)) {
     showControl = true;
     // Control is different for mobile and desktop if deviceType as a key exists in the database
     if (chartControl[deviceType]) chartControl = chartControl[deviceType];
@@ -100,8 +96,9 @@ const SubChart = ({ chartData, chartSubIndex, isPortrait, isHomepage }) => {
       height: isPortrait ? '60%' : '70%'
     },
     width: isPortrait ? (chartData.options?.width?.portrait || '100%') : (chartData.options?.width?.landscape || '100%'),
-    // if there is a filter, we make space for the chartFilter from the chart's height. 
-    // value is divided in 2 because the calculation is applied twice due to how react-google-charts nest components
+    // if there is a filter, we make space for the chartFilter from the chart's height.
+    // value is divided in 2 because the calculation is applied twice due to
+    // how react-google-charts nest components
     height: showControl ? `calc(100% - (${chartFilterHeightInPixel}px / 2))` : '100%',
     backgroundColor: { fill: 'transparent' },
     tooltip: {
@@ -113,8 +110,8 @@ const SubChart = ({ chartData, chartSubIndex, isPortrait, isHomepage }) => {
     legend: {
       alignment: isPortrait ? 'center' : 'start',
       position:
-        chartData.options?.legend?.position ??
-        (isPortrait ? 'top' : 'right'),
+        chartData.options?.legend?.position
+        ?? (isPortrait ? 'top' : 'right'),
       scrollArrows: {
         activeColor: theme.palette.chart.axisTitle,
         inactiveColor: theme.palette.text.secondary,
@@ -141,37 +138,40 @@ const SubChart = ({ chartData, chartSubIndex, isPortrait, isHomepage }) => {
     title: options.hAxis?.title ?? '',
   };
   // 3.1. If in portrait mode, slant the text of the hAxis
-  if (isPortrait)
+  if (isPortrait) {
     options.hAxis = {
       ...options.hAxis,
       slantedText: true,
       slantedTextAngle: 30,
     };
+  }
 
   // 4. Override with custom colors:
   // 4.1. Color scheme of all the series of this chart
-  if (typeof options.colors === 'string' || !options.colors)
-    options.colors =
-      theme.palette.chart.optionsColors[options.colors || 'multiColor'];
+  if (typeof options.colors === 'string' || !options.colors) options.colors = theme.palette.chart.optionsColors[options.colors || 'multiColor'];
   // 4.2. Individual color of a single serie (if given)
-  if (options.series)
-    Object.values(options.series).forEach((serie) => {
-      if (serie.color === 'default') serie.color = theme.palette.primary.main;
+  if (options.series) {
+    Object.values(options.series).forEach((_serie) => {
+      const serie = _serie;
+      if (serie.color === 'default') {
+        serie.color = theme.palette.primary.main;
+      }
     });
+  }
   // 4.3. Color of the trendline
-  if (options.trendlines)
-    options.trendlines.forEach((item) => {
+  if (options.trendlines) {
+    options.trendlines.forEach((_item) => {
+      const item = _item;
       item.color = theme.palette.primary.main;
     });
+  }
   // 4.4. Color axis of the Calendar chart
   if (options.colorAxis) {
     switch (options.colorAxis.colors) {
       case 'matchingColor':
         options.colorAxis.colors = [
           theme.palette.chart.colorAxisFirstColor,
-          theme.palette.chart.optionsColors['multiColor'][
-          options.colorAxis.colorIndex
-          ],
+          theme.palette.chart.optionsColors.multiColor[options.colorAxis.colorIndex],
         ];
         break;
       case 'default':
@@ -182,6 +182,7 @@ const SubChart = ({ chartData, chartSubIndex, isPortrait, isHomepage }) => {
         break;
       case 'aqi':
         options.colorAxis = theme.palette.chart.aqiColorAxis;
+        break;
       default:
         break;
     }
@@ -236,7 +237,7 @@ const SubChart = ({ chartData, chartSubIndex, isPortrait, isHomepage }) => {
   };
 
   // 5. If the chart is displayed on the homepage, override the options with:
-  if (isHomepage)
+  if (isHomepage) {
     options = {
       ...options,
       enableInteractivity: false,
@@ -256,27 +257,28 @@ const SubChart = ({ chartData, chartSubIndex, isPortrait, isHomepage }) => {
       hAxis: {
         ...options.hAxis,
         textPosition: 'none',
-        gridlines: { color: "transparent", count: 0 },
+        gridlines: { color: 'transparent', count: 0 },
         titleTextStyle: {
           ...options.hAxis.titleTextStyle,
           bold: false
         }
       },
     };
+  }
 
   // Assign the appropriate controlOptions based on controlType (if existed)
-  if (chartControl?.controlType === "ChartRangeFilter")
+  if (chartControl?.controlType === 'ChartRangeFilter') {
     chartControl.options.ui = {
       ...chartControl.options?.ui,
       chartType: chartData.chartType,
       snapToData: true,
       chartView: {
         columns:
-          chartData.columns ||
-          (chartData.subcharts &&
-            chartData.subcharts[chartSubIndex].columns) ||
-          null ||
-          null,
+          chartData.columns
+          || (chartData.subcharts
+            && chartData.subcharts[chartSubIndex].columns)
+          || null
+          || null,
       },
       chartOptions: {
         ...options,
@@ -290,13 +292,14 @@ const SubChart = ({ chartData, chartSubIndex, isPortrait, isHomepage }) => {
         legend: null,
       }
     };
+  }
 
   // When chart is ready
   const chartEvents = [
     {
       eventName: 'ready',
-      callback: ({ chartWrapper }) => {
-        circleProgress = displayCircleProgress(false);
+      callback: () => {
+        displayCircleProgress(false);
       },
     },
   ];
@@ -306,11 +309,11 @@ const SubChart = ({ chartData, chartSubIndex, isPortrait, isHomepage }) => {
     chartWrapperParams: {
       view: {
         columns:
-          chartData.columns ||
-          (chartData.subcharts &&
-            chartData.subcharts[chartSubIndex].columns) ||
-          null ||
-          null,
+          chartData.columns
+          || (chartData.subcharts
+            && chartData.subcharts[chartSubIndex].columns)
+          || null
+          || null,
       },
     },
     spreadSheetUrl: `https://docs.google.com/spreadsheets/d/${chartData.sheetId}`,
@@ -323,26 +326,25 @@ const SubChart = ({ chartData, chartSubIndex, isPortrait, isHomepage }) => {
         }
         : {
           headers:
-            chartData.headers ||
-            chartData.subcharts[chartSubIndex].headers ||
-            null,
+            chartData.headers
+            || chartData.subcharts[chartSubIndex].headers
+            || null,
           query:
-            chartData.query ||
-            chartData.subcharts[chartSubIndex].query ||
-            null,
+            chartData.query
+            || chartData.subcharts[chartSubIndex].query
+            || null,
           gid:
-            chartData.gid ||
-            chartData.subcharts[chartSubIndex].gid ||
-            null,
-        }
-    ,
-    options: options,
-    chartEvents: chartEvents,
+            chartData.gid
+            || chartData.subcharts[chartSubIndex].gid
+            || null,
+        },
+    options,
+    chartEvents,
     // if the filter prop exists and it's not a chart on homepage:
     // add the packages and control props below
     ...(
       showControl ? {
-        chartPackages: ["corechart", "controls"],
+        chartPackages: ['corechart', 'controls'],
         controls: [
           chartControl
         ]
@@ -350,20 +352,24 @@ const SubChart = ({ chartData, chartSubIndex, isPortrait, isHomepage }) => {
     )
   };
 
-  if (chartData.chartType == 'Calendar') return (
-    <CalendarChart
-      chartData={chartData}
-      chartProps={chartProps}
-      isPortrait={isPortrait}
-    />
-  )
+  if (chartData.chartType === 'Calendar') {
+    return (
+      <CalendarChart
+        chartData={chartData}
+        chartProps={chartProps}
+        isPortrait={isPortrait}
+        showControl={showControl}
+        chartFilterHeightInPixel={chartFilterHeightInPixel}
+      />
+    );
+  }
 
   return (
     <Box
-      position={'relative'}
+      position="relative"
       className={chartData.chartType}
       height="100%"
-      width='100%'
+      width="100%"
     >
       {circleProgress && (
         <CircularProgress
@@ -372,9 +378,17 @@ const SubChart = ({ chartData, chartSubIndex, isPortrait, isHomepage }) => {
           }}
         />
       )}
-      <Chart style={{ margin: "auto" }} {...chartProps} />
+      <Chart style={{ margin: 'auto' }} {...chartProps} />
     </Box>
   );
 }
 
-export default SubChart;
+export default memo(SubChart, (prevProps, nextProps) => {
+  if (prevProps.isPortrait !== nextProps.isPortrait) return false;
+  if (prevProps.isHomePage !== nextProps.isHomePage) return false;
+  if (!isEqual(prevProps.windowSize, nextProps.windowSize)) return false;
+
+  // perform light calculations first before performing
+  // deep comparison for chartData object
+  return isEqual(prevProps.chartData, nextProps.chartData);
+});

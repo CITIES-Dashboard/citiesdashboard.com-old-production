@@ -30,17 +30,13 @@ import { replacePlainHTMLWithMuiComponents } from '../../Utils/Utils';
 import { DatasetDownloadButton } from './DatasetDownloadButton';
 
 import { scrollToSection } from '../../Components/Header/MenuItemAsNavLink';
+import FullWidthBox from '../../Components/FullWidthBox';
 
 import * as Tracking from '../../Utils/Tracking';
 
 import { CommentCountsContext } from '../../ContextProviders/CommentCountsContext';
 
 import { SheetsDataContext } from '../../ContextProviders/SheetsDataContext';
-
-const BoxStyledWrapper = styled(Box)(() => ({
-  paddingLeft: `env(safe-area-inset-left)`,
-  paddingRight: `env(safe-area-inset-right)`,
-}));
 
 // Custom Chip component to display metadata
 const CustomChip = (props) => {
@@ -68,7 +64,8 @@ const Project = ({ themePreference }) => {
 
   const [sheetsData] = useContext(SheetsDataContext);
   const lastUpdate = sheetsData[project.id];
-
+  
+  console.log('Project updating')
 
   // Update the page's title
   useEffect(() => { if (project.title) document.title = `${project.title} | CITIES Dashboard`, [project] });
@@ -102,7 +99,7 @@ const Project = ({ themePreference }) => {
     <>
       {loading && (
         <Box width="100%">
-          <BoxStyledWrapper>
+          <FullWidthBox>
             <Container sx={{ pt: 4, pb: 4 }}>
 
               <UppercaseTitle text={project.title} />
@@ -200,11 +197,11 @@ const Project = ({ themePreference }) => {
                 }
               />
             </Container>
-          </BoxStyledWrapper>
+          </FullWidthBox>
 
           <Box id={jsonData.charts.id}>
             {project.charts.map((element, index) => (
-              <BoxStyledWrapper
+              <FullWidthBox
                 id={chartsTitlesList[index].chartID} // set the chartWrapper's ID to help Navbar in Header scroll to
                 key={index}
                 backgroundColor={
@@ -261,22 +258,22 @@ const Project = ({ themePreference }) => {
                     </Typography>
                   </Box>
                 </Container>
-              </BoxStyledWrapper>
+              </FullWidthBox>
             ))}
           </Box>
 
 
           <Divider />
 
-          <BoxStyledWrapper id={jsonData.commentSection.id} sx={{ pt: 3, pb: 4 }}>
+          <FullWidthBox id={jsonData.commentSection.id} sx={{ pt: 3, pb: 4 }}>
             <CommentSection pageID={project.id} />
-          </BoxStyledWrapper>
+          </FullWidthBox>
 
           <Divider />
 
-          <BoxStyledWrapper id={jsonData.getInTouch.id} sx={{ pt: 3, pb: 4 }}>
+          <FullWidthBox id={jsonData.getInTouch.id} sx={{ pt: 3, pb: 4 }}>
             <GetInTouch />
-          </BoxStyledWrapper>
+          </FullWidthBox>
         </Box>
       )}
     </>

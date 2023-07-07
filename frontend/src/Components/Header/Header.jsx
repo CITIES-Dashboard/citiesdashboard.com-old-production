@@ -2,8 +2,12 @@
 /* eslint-disable */
 import { useState, useContext } from 'react';
 import { styled } from '@mui/material/styles';
-import { LinkContext } from '../../ContextProviders/LinkContext';
 import { Tooltip, Box, Typography, Container, Paper, AppBar, Toolbar, useScrollTrigger, Slide, Stack, Drawer, Divider } from '@mui/material';
+
+import parse from 'html-react-parser';
+
+import { LinkContext } from '../../ContextProviders/LinkContext';
+import FullWidthBox from '../FullWidthBox';
 
 import ThemeSelector from './ThemeSelector';
 import NavBar from './NavBar';
@@ -16,7 +20,6 @@ import SettingsIcon from '@mui/icons-material/Settings';
 // import images
 
 import jsonData from '../../section_data.json';
-import parse from 'html-react-parser';
 import { replacePlainHTMLWithMuiComponents } from '../../Utils/Utils';
 import { CITIESlogoLinkToHome } from './CITIESlogoLinkToHome';
 
@@ -163,15 +166,14 @@ export default function Header(props) {
       <Toolbar id={topAnchorID} sx={{ backgroundColor: "customAlternateBackground", height: `${toolBarHeightInRem * 1.5}rem` }
       } />
 
-      <Box sx={{ 
+      <FullWidthBox sx={{
         width: '100%',
-        paddingLeft: `env(safe-area-inset-left)`,
-        paddingRight: `env(safe-area-inset-right)`,
-        pt: 4, 
-        pb: 3, 
-        backgroundColor: "customAlternateBackground" 
-      }}>
-        <Container >
+        pt: 4,
+        pb: 3,
+        backgroundColor: 'customAlternateBackground'
+      }}
+      >
+        <Container>
           <Typography
             variant="h3"
             color="text.primary"
@@ -186,7 +188,7 @@ export default function Header(props) {
             })}
           </Typography>
         </Container>
-      </Box >
+      </FullWidthBox>
 
       <SpeedDialButton chartsTitlesList={chartsTitlesList} topAnchorID={topAnchorID} />
 

@@ -1,8 +1,7 @@
-// disable eslint for this file
-/* eslint-disable */
-import { useState, useMemo, useEffect, useContext } from 'react';
+import { useState, memo, useEffect, useContext } from 'react';
 import { styled } from '@mui/material/styles';
 import { Box, Tabs, Tab } from '@mui/material/';
+import isEqual from 'lodash.isequal';
 import { TabContext } from '../ContextProviders/TabContext';
 
 import SubChart from './SubChart';
@@ -11,9 +10,9 @@ const debounceMilliseconds = 50;
 
 const ChartStyleWrapper = styled(Box)(({ theme }) => ({
   // CSS for dark theme only
-  ...(theme.palette.mode == "dark" && {
+  ...(theme.palette.mode === 'dark' && {
     // De-saturate a bit
-    filter: "saturate(0.85)",
+    filter: 'saturate(0.85)',
     // Invert iframe
     '& .heat-map-iframe': {
       filter: 'invert(0.848) hue-rotate(180deg)',
@@ -31,10 +30,23 @@ const ChartStyleWrapper = styled(Box)(({ theme }) => ({
   '& .Calendar .google-visualization-tooltip': {
     padding: '0.5rem',
   },
-  /* Modify the appearance of the Google chart's filter (by selecting all divs with id containing the keyword below */
+  /* Modify the appearance of the Google chart's filter
+  // (by selecting all divs with id containing the keyword below */
   '& [id^=googlechart-control]': {
     opacity: 0.75,
     filter: 'saturate(0.25)',
+  },
+
+  '& .google-visualization-controls-categoryfilter': {
+    fontSize: '0.85rem',
+    marginTop: '0.75rem',
+    marginBottom: '-0.75rem',
+
+    '& .google-visualization-controls-label': {
+      color: theme.palette.text.secondary,
+      verticalAlign: 'middle',
+      marginBottom: '0.5rem'
+    },
   },
 
   // CSS for DateRangeFilter-type filter charts to look consistent with our styling
@@ -72,9 +84,7 @@ const ChartStyleWrapper = styled(Box)(({ theme }) => ({
     }
   },
 
-
-
-  // These are the paths showing on top of the line chart 
+  // These are the paths showing on top of the line chart
   // and the stroke around the bar/column chart
   // when the user hovers on the legend to make the serie stand out
   // by Google Chart's default doesn't change color based on light/dark theme, but we modify here:
@@ -92,13 +102,24 @@ const ChartStyleWrapper = styled(Box)(({ theme }) => ({
   }
 }));
 
-
-export default function ChartComponent({ chartData, chartWrapperHeight, chartWrapperMaxHeight, isHomepage }) {
+// eslint-disable-next-line max-len
+function ChartComponent({ chartData: passedChartData, chartWrapperHeight: passedChartWrapperHeight, isHomepage }) {
   const [isPortrait, setIsPortrait] = useState(window.matchMedia('(orientation: portrait)').matches);
   const [windowSize, setWindowSize] = useState([
     window.innerWidth,
     window.innerHeight,
   ]);
+
+  let chartWrapperMaxHeight;
+  let chartWrapperHeight = passedChartWrapperHeight;
+  let chartData = passedChartData;
+
+  // use tab context
+  const [_, setTab] = useContext(TabContext);
+
+  // Props for tab panels (multiple data visualizations in the same chart area,
+  // navigate with tab panels)
+  const [indexValue, setIndexValue] = useState(0); // start with the first elem
 
   // eventListener for window resize
   // redraw "Calendar" charts and charts with a time filter upon window resize.
@@ -121,13 +142,11 @@ export default function ChartComponent({ chartData, chartWrapperHeight, chartWra
         // we redraw Calendar/Filter type charts on ANY window resize, even if
         // device orientation does not change.
 
-        if (chartData.chartType === "Calendar"
+        if (chartData.chartType === 'Calendar'
           || (chartData.subcharts?.some((subchart) => subchart.filter != null))
           || (chartData.filter != null)) {
-
           setWindowSize(window.innerWidth, window.innerHeight);
         }
-
       }, debounceMilliseconds);
     };
 
@@ -137,15 +156,15 @@ export default function ChartComponent({ chartData, chartWrapperHeight, chartWra
     return () => {
       window.removeEventListener('resize', handleWindowResize);
     };
-  }, []);
+  }, [chartData]);
 
-  if (chartData.chartType != 'Table' && chartData.chartType != 'Calendar' && !chartWrapperHeight) {
+  if (chartData.chartType !== 'Table' && chartData.chartType !== 'Calendar' && !chartWrapperHeight) {
     chartWrapperHeight = isPortrait ? '80vw' : '35vw';
     chartWrapperMaxHeight = isPortrait ? '800px' : '500px';
   }
 
-  // Assign the subcharts array for HeatMap based on the device orientation 
-  if (chartData.chartType == 'HeatMap' || chartData.chartType == 'ComboChart') {
+  // Assign the subcharts array for HeatMap based on the device orientation
+  if (chartData.chartType === 'HeatMap' || chartData.chartType === 'ComboChart') {
     chartData = {
       ...chartData,
       ...chartData[isPortrait ? 'subchartsPortrait' : 'subchartsLandscape'],
@@ -154,18 +173,10 @@ export default function ChartComponent({ chartData, chartWrapperHeight, chartWra
 
   // Check if there are multiple subcharts
   if (chartData.subcharts) {
-    // use tab context
-    const [_, setTab] = useContext(TabContext);
-
-    // Props for tab panels (multiple data visualizations in the same chart area, navigate with tab panels)
-    const [indexValue, setIndexValue] = useState(0); // start with the first elem
-
     // Handle tab change
-    const handleChange = (event, newValue) => {
+    const handleChange = (__, newValue) => {
       // use setTab to copy the tab object and update the subIndex
-      setTab((prevState) => {
-        return { ...prevState, [chartData.chartIndex]: newValue };
-      });
+      setTab((prevState) => ({ ...prevState, [chartData.chartIndex]: newValue }));
       setIndexValue(newValue);
     };
 
@@ -208,22 +219,18 @@ export default function ChartComponent({ chartData, chartWrapperHeight, chartWra
               height="100%"
               width="100%"
               role="tabpanel"
-              position={(index === 0) ? "" : "absolute"}
-              top={(index === 0) ? "" : 0}
-              left={(index === 0) ? "" : 0}
+              position={(index === 0) ? '' : 'absolute'}
+              top={(index === 0) ? '' : 0}
+              left={(index === 0) ? '' : 0}
               visibility={indexValue === index ? 'visible' : 'hidden'}
             >
-              {useMemo(
-                () => (
-                  <SubChart
-                    chartData={chartData}
-                    chartSubIndex={index}
-                    isPortrait={isPortrait}
-                    isHomepage={isHomepage}
-                  />
-                ),
-                [windowSize, isPortrait]
-              )}
+              <SubChart
+                chartData={chartData}
+                chartSubIndex={index}
+                isPortrait={isPortrait}
+                isHomepage={isHomepage}
+                windowSize={windowSize}
+              />
             </Box>
           ))}
         </Box>
@@ -231,16 +238,24 @@ export default function ChartComponent({ chartData, chartWrapperHeight, chartWra
     );
   }
   // If there is only one single chart
-  else
-    return (
-      <ChartStyleWrapper
-        position="relative"
-        height={chartData.height ? chartData.height : chartWrapperHeight}
-        maxHeight={
-          chartData.chartType == 'HeatMap' ? '' : chartWrapperMaxHeight
+  return (
+    <ChartStyleWrapper
+      position="relative"
+      height={chartData.height ? chartData.height : chartWrapperHeight}
+      maxHeight={
+          chartData.chartType === 'HeatMap' ? '' : chartWrapperMaxHeight
         }
-      >
-        <SubChart chartData={chartData} isPortrait={isPortrait} isHomepage={isHomepage} />
-      </ChartStyleWrapper>
-    );
+    >
+      <SubChart chartData={chartData} isPortrait={isPortrait} isHomepage={isHomepage} />
+    </ChartStyleWrapper>
+  );
 }
+
+export default memo(ChartComponent, (prevProps, nextProps) => {
+  if (prevProps.chartWrapperHeight !== nextProps.chartWrapperHeight) return false;
+  if (prevProps.isHomePage !== nextProps.isHomePage) return false;
+
+  // perform light calculations first before performing
+  // deep comparison for chartData object
+  return isEqual(prevProps.chartData, nextProps.chartData);
+});
