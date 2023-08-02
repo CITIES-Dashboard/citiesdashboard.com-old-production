@@ -1,13 +1,11 @@
-import { useState, useMemo, useCallback, memo } from 'react';
-import { Chart } from 'react-google-charts';
+import { useState, useCallback } from 'react';
 import { isMobile } from 'react-device-detect';
 import { Box, CircularProgress } from '@mui/material/';
 
 import { useTheme, styled } from '@mui/material/styles';
-import isEqual from 'lodash.isequal';
 import HeatMap from './HeatMap';
 import CalendarChart from './ResponsiveCalendarChart';
-// import StudentPopChart from './StudentPopulation';
+import MemoizedChart from './MemoizedChart';
 
 const chartFilterHeightInPixel = 50;
 
@@ -171,7 +169,9 @@ export default function SubChart({ chartData, chartSubIndex, windowSize, isPortr
     theme: 'material',
     curveType: options.curveType || chartData.options?.curveType || 'function',
     crosshair: { orientation: 'both', trigger: 'focus', opacity: 0.5 },
+    backgroundColor: { fill: 'transparent' },
     chartArea: {
+      ...chartData.options?.chartArea,
       width: isPortrait ? (chartData.options?.chartArea?.width?.portrait || '80%') : (chartData.options?.chartArea?.width?.landscape || '75%'),
       height: isPortrait ? '60%' : '70%'
     },
@@ -180,12 +180,12 @@ export default function SubChart({ chartData, chartSubIndex, windowSize, isPortr
     // value is divided in 2 because the calculation is applied twice due to
     // how react-google-charts nest components
     height: showControl ? `calc(100% - (${chartFilterHeightInPixel}px / 2))` : '100%',
-    backgroundColor: { fill: 'transparent' },
     tooltip: {
       isHtml: true,
       showColorCode: false
     },
     legend: {
+      backgroundColor: '#fff',
       alignment: isPortrait ? 'center' : 'start',
       position:
         chartData.options?.legend?.position
@@ -343,12 +343,6 @@ export default function SubChart({ chartData, chartSubIndex, windowSize, isPortr
         }
       },
     };
-    // Disable interactivity for all series if these series are specified in options.series
-    if (options.series) {
-      Object.keys(options.series).forEach((serie) => {
-        options.series[serie].enableInteractivity = false;
-      });
-    }
   }
 
   // Assign the appropriate controlOptions based on controlType (if existed)
@@ -461,12 +455,15 @@ export default function SubChart({ chartData, chartSubIndex, windowSize, isPortr
 
   if (chartData.chartType === 'Calendar') {
     return (
-      <CalendarChart
-        chartData={chartData}
-        chartProps={chartProps}
-        isPortrait={isPortrait}
-        showControl={showControl}
-      />
+      <SubChartStyleWrapper>
+        <CalendarChart
+          chartData={chartData}
+          chartProps={chartProps}
+          isPortrait={isPortrait}
+          showControl={showControl}
+        />
+      </SubChartStyleWrapper>
+
     );
   }
 
@@ -490,12 +487,3 @@ export default function SubChart({ chartData, chartSubIndex, windowSize, isPortr
     </SubChartStyleWrapper>
   );
 }
-
-const MemoizedChart = memo(
-  ({ chartProps }) => <Chart style={{ margin: 'auto' }} {...chartProps} />,
-  (prevProps, nextProps) => {
-    if (!isEqual(prevProps.windowSize, nextProps.windowSize)) return false;
-    if (prevProps.isPortrait !== nextProps.isPortrait) return false;
-    return isEqual(prevProps.chartProps, nextProps.chartProps);
-  }
-);

@@ -11,7 +11,7 @@
       {
         "gid": 584789045,
         "headers": 1,
-        "query": "SELECT A, B, C, D, G, H, I, L, M, N ORDER BY A DESC LIMIT 10"
+        "query": "SELECT A, B, C, D ORDER BY A DESC LIMIT 10"
       }
     ],
     "homepageChartIndex": 1,
@@ -195,53 +195,58 @@
         "customClassName": "historical-snapshot-aqi",
         "options": {
           "colors": "reverseAqi",
+          "chartArea": {
+            "backgroundColor": "#fff"
+          },
           "seriesType": "area",
           "lineWidth": 0,
           "areaOpacity": 1,
-          "enableInteractivity": false,
           "series": {
             "0": {
-              "pointSize": 0
+              "pointSize": 0,
+              "visibleInLegend": false
             },
             "1": {
-              "pointSize": 0
+              "pointSize": 0,
+              "visibleInLegend": false
             },
             "2": {
-              "pointSize": 0
+              "pointSize": 0,
+              "visibleInLegend": false
             },
             "3": {
-              "pointSize": 0
+              "pointSize": 0,
+              "visibleInLegend": false
             },
             "4": {
-              "pointSize": 0
+              "pointSize": 0,
+              "visibleInLegend": false
             },
             "5": {
-              "pointSize": 0
+              "pointSize": 0,
+              "visibleInLegend": false
             },
             "6": {
               "lineWidth": 1.5,
               "type": "line",
-              "enableInteractivity": true,
-              "color": "#000"
+              "color": "#555"
             },
             "7": {
-              "lineWidth": 1,
+              "lineWidth": 1.25,
               "type": "line",
-              "enableInteractivity": true,
-              "color": "#000",
+              "color": "#555",
               "lineDashStyle": [
                 5,
-                2
+                1.5
               ]
             },
             "8": {
-              "lineWidth": 1,
+              "lineWidth": 1.25,
               "type": "line",
-              "enableInteractivity": true,
-              "color": "#000",
+              "color": "#555",
               "lineDashStyle": [
-                1,
-                1
+                1.25,
+                0.75
               ]
             }
           },
@@ -255,28 +260,35 @@
       },
       {
         "title": "Daily AQI, All Time",
+        "subtitle": "This calendar chart shows how the daily AQI varies throughout the year across different locations of the air quality network. Each square cell represents one day and its color corresponds to the category of the AQI. Hover over each square cell to see the specific date and its average AQI.<br><br><small><b>Note: </b>There were some gaps in our data collection. Dates where there was no recorded data are represented by empty cells.</small>",
+        "gid": 1764126775,
+        "headers": 1,
+        "chartType": "Calendar",
         "subcharts": [
           {
-            "query": "SELECT A, C, D WHERE NOT D='No Data'",
+            "query": "SELECT A, B, E, I WHERE NOT E='No Data'",
             "subchartTitle": "Outdoor"
           },
           {
-            "query": "SELECT A, H, I WHERE NOT I='No Data'",
+            "query": "SELECT A, C, F, J WHERE NOT F='No Data'",
             "subchartTitle": "Campus Center"
           },
           {
-            "query": "SELECT A, M, N WHERE NOT N='No Data'",
+            "query": "SELECT A, D, G, K WHERE NOT G='No Data'",
             "subchartTitle": "Dining Hall D2"
           }
         ],
         "columns": [
           0,
-          1
+          1,
+          {
+            "role": "tooltip",
+            "properties": {
+              "html": true
+            },
+            "sourceColumn": 3
+          }
         ],
-        "subtitle": "This calendar chart shows how the daily AQI varies throughout the year across different locations of the air quality network. Each square cell represents one day and its color corresponds to the category of the AQI. Hover over each square cell to see the specific date and its average AQI.<br><br><small><b>Note: </b>There were some gaps in our data collection. Dates where there was no recorded data are represented by empty cells.</small>",
-        "gid": 584789045,
-        "headers": 1,
-        "chartType": "Calendar",
         "options": {
           "colorAxis": {
             "colors": "aqi"
@@ -565,7 +577,7 @@
     "id": "athletics-fabs-membership",
     "title": "Athletics FABS Membership",
     "sheetId": "1mRberQXQI9uHCP_gGXgK8NfjbiA2DdQc-HH1c01eEDk",
-    "description": "This dataset visualizes the number of unique memberships registered in the Fitness and Athletics Booking (FABS) system by academic year (AY). For example, AY 2022-2023 spanned from September 1, 2022 to August 31, 2023.<br><br>FABS members can access on-campus Athletic facilities, such as the fitness center, women’s-only gym, faculty pool, 50m pool, 400m track and indoor track.<br><br>While there are 11 different types of FABS accounts, our data visualizations simplify them into <b>four distinct demographic groups</b>: <ul style='margin-left: 1rem'><li>Undergraduate student</li><li>Graduate student and Alumni</li><li>Staff affiliation (consisting of faculty, staff, and family member)</li><li>External and Other (consiting of community, contract, external instructor, guest, and Tamkeen)</li></ul>",
+    "description": "This dataset visualizes the number of unique active memberships registered in the Fitness and Athletics Booking system (FABS) by academic year (AY). For FABS, an AY starts from <b>August 1</b> of the first calendar year to <b>July 31</b> of the second calendar year. After <b>July 31</b>, all existing memberships expire and members need to register again for the next AY. FABS members can register for sport classes, reserve lockers, and book and access Athletic facilities.<br><br>While there are 11 different types of FABS accounts, our data visualizations simplify them into <b>four distinct demographic groups</b>: <ul style='margin-left: 1rem'><li>Undergraduate student</li><li>Graduate student and Alumni</li><li>Staff affiliation (consisting of faculty, staff, and family member)</li><li>External and Other (consiting of community, contract, external instructor, guest, and Tamkeen)</li></ul>",
     "owner": "Department of Athletics",
     "contact": "nyuad.athletics@nyu.edu",
     "rawDataTables": [
@@ -578,7 +590,7 @@
     "charts": [
       {
         "title": "Number of Unique FABS Memberships",
-        "subtitle": "As the <a href='./student-population'>university population</a> continues to grow, FABS membership registrations have generally exhibited an upward trend, except for a 40% decline in AY20-21. During this period, the university introduced remote working policies and campus access restrictions to combat the COVID-19 pandemic. As a result, there was a significant decrease in Staff affiliated together with External and Other memberships; meanwhile, undergraduate student memberships only decreased by 14% in AY20-21 as most students were allowed to stay on-campus.<br><br>AY21-22 and AY22-23 saw a remarkable rebounce in the number of memberships that exceeded pre-COVID figures across all demographic categories. Notably, the number of External and Other memberships (consisting of guests and other external communities) almost quadrupled in AY21-22, following the relaxation of most COVID restrictions for indoor places.",
+        "subtitle": "As the <a href='./student-population'>university population</a> continues to grow, FABS membership registrations have generally exhibited an upward trend, except for a 40% decline in AY20-21. During this period, the university introduced remote working policies and campus access restrictions to combat the COVID-19 pandemic. As a result, there was a significant decrease in Staff affiliated together with External and Other memberships; meanwhile, undergraduate student memberships only decreased by 14% in AY20-21 as most students were allowed to stay on-campus.<br><br>From March 2020 to June 2022, access to the Fitness Center, Women's Only-Gym, Indoor and Outdoor Tracks, and the 50m Pool required advanced booking on FABS' Capacity Management portal. Thus, those who wished to use these facilities must have a FABS membership. <br><br>AY21-22 and AY22-23 saw a remarkable rebounce in the number of memberships that exceeded pre-COVID figures across all demographic categories. Notably, the number of External and Other memberships (consisting of guests and other external communities) almost quadrupled in AY21-22, following the relaxation of most COVID restrictions for indoor places.",
         "gid": 337720664,
         "chartType": "ComboChart",
         "headers": 1,
@@ -677,7 +689,7 @@
         "title": "Percentage of Demographic Groups in FABS",
         "subtitle": "Undergraduate students have remained the largest group of FABS in recent years, representing around two-thirds of all memberships.",
         "gid": 337720664,
-        "query": "SELECT A, B, C, D, E, G, H, I, K",
+        "query": "SELECT A, B, C, D, E, I, J, K , L",
         "headers": 1,
         "columns": [
           0,
@@ -1168,15 +1180,19 @@
         "gid": 1952244844,
         "headers": 1,
         "chartType": "Calendar",
+        "query": "SELECT A, F, L, C, I, D, J, E, K",
         "subcharts": [
           {
             "subchartTitle": "Total (3 meals)",
             "columns": [
               0,
-              5,
+              1,
               {
                 "role": "tooltip",
-                "sourceColumn": 11
+                "properties": {
+                  "html": true
+                },
+                "sourceColumn": 2
               }
             ],
             "options": {
@@ -1189,10 +1205,13 @@
             "subchartTitle": "Breakfast",
             "columns": [
               0,
-              2,
+              3,
               {
                 "role": "tooltip",
-                "sourceColumn": 8
+                "properties": {
+                  "html": true
+                },
+                "sourceColumn": 4
               }
             ],
             "options": {
@@ -1206,10 +1225,13 @@
             "subchartTitle": "Lunch",
             "columns": [
               0,
-              3,
+              5,
               {
                 "role": "tooltip",
-                "sourceColumn": 9
+                "properties": {
+                  "html": true
+                },
+                "sourceColumn": 6
               }
             ],
             "options": {
@@ -1223,10 +1245,13 @@
             "subchartTitle": "Dinner",
             "columns": [
               0,
-              4,
+              7,
               {
                 "role": "tooltip",
-                "sourceColumn": 10
+                "properties": {
+                  "html": true
+                },
+                "sourceColumn": 8
               }
             ],
             "options": {
