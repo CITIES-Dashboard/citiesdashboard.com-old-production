@@ -9,7 +9,7 @@ import ChartComponent from '../../Graphs/ChartComponent';
 import SampleDataTable from '../../Graphs/SampleDataTable';
 import UppercaseTitle from '../../Components/UppercaseTitle';
 import CommentSection from '../../Components/CommentSection';
-import { Box, Typography, Container, Divider, Chip, Grid, Tooltip, styled } from '@mui/material';
+import { Box, Typography, Container, Divider, Chip, Grid, Tooltip } from '@mui/material';
 
 import GetInTouch from '../Home/GetInTouch';
 
@@ -39,6 +39,8 @@ import * as Tracking from '../../Utils/Tracking';
 import { CommentCountsContext } from '../../ContextProviders/CommentCountsContext';
 
 import { SheetsDataContext } from '../../ContextProviders/SheetsDataContext';
+
+import ChartSubstituteComponentLoader from '../../Graphs/ChartSubstituteComponents/ChartSubstituteComponentLoader';
 
 // Custom Chip component to display metadata
 const CustomChip = (props) => {
@@ -192,8 +194,7 @@ const Project = ({ themePreference }) => {
                     {project.rawDataTables.map((element, index) => (
                       <SampleDataTable
                         key={index}
-                        chartData={element}
-                        sheetId={project.sheetId}
+                        chartData={{ sheetId: project.sheetId, ...element }}
                         marginBottom={(index < project.rawDataTables.length - 1) ? 3 : 1}
                       />
                     ))}
@@ -220,18 +221,24 @@ const Project = ({ themePreference }) => {
                   <Typography variant="h6" color="text.primary">
                     {index + 1}. {element.title}
                   </Typography>
-                  <ChartComponent
-                    chartData={{
-                      chartIndex: index,
-                      sheetId: project.sheetId,
-                      ...element,
-                    }}
-                  />
-                  <Box sx={{ m: 3 }}>
+
+                  {/* Either display the regular ChartComponent, or substitute with a customized component in ../../Graphs/ChartSubstituteComponents/ (if specified) */}
+                  {element.chartSubstituteComponentName ?
+                    <ChartSubstituteComponentLoader chartSubstituteComponentName={element.chartSubstituteComponentName} />
+                    : (
+                      <ChartComponent
+                        chartData={{
+                          chartIndex: index,
+                          sheetId: project.sheetId,
+                          ...element,
+                        }}
+                      />
+                    )}
+
+                  <Box sx={{ my: 3 }}>
                     <Typography
                       variant="body1"
                       color="text.secondary"
-                      sx={{ mb: 2 }}
                     >
                       {element.subtitle && parse(element.subtitle, {
                         replace: replacePlainHTMLWithMuiComponents,
