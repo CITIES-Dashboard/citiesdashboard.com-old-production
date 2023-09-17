@@ -1,4 +1,4 @@
-import { Link, List, ListItem, ListItemText, styled } from '@mui/material';
+import { Link, List, ListItem, ListItemText, Table, TableBody, TableCell, TableHead, TableRow, styled, TableFooter } from '@mui/material';
 import parse, { domToReact } from 'html-react-parser';
 
 // Function to replace characters like "-" with " " from a string and capitalize it
@@ -36,14 +36,20 @@ export const replacePlainHTMLWithMuiComponents = (node) => {
   if (node.type !== 'tag') return undefined;
 
   switch (node.name) {
-    case 'a':
+    case 'a': {
       return (
-        <Link href={node.attribs.href} target="_blank" rel="noopener noreferrer" underline="hover">
+        <Link
+          href={node.attribs.href}
+          target="_blank"
+          rel="noopener noreferrer"
+          underline="hover"
+        >
           {node.children && node.children.length > 0 && parse(node.children[0].data)}
         </Link>
       );
+    }
 
-    case 'ul':
+    case 'ul': {
       return (
         <List dense sx={{ listStyleType: htmlOrderedListTypeToMUIListStyle.disc, paddingLeft: 4, paddingTop: '6px' }}>
           {node.children.map((child) => (
@@ -53,8 +59,9 @@ export const replacePlainHTMLWithMuiComponents = (node) => {
           ))}
         </List>
       );
+    }
 
-    case 'ol':
+    case 'ol': {
       return (
         <List dense sx={{ listStyleType: htmlOrderedListTypeToMUIListStyle[node.attribs.type], paddingLeft: 4, paddingTop: '6px' }}>
           {node.children.map((child) => (
@@ -64,8 +71,50 @@ export const replacePlainHTMLWithMuiComponents = (node) => {
           ))}
         </List>
       );
+    }
 
-    default:
+    case 'table': {
+      const thead = node.children.find((child) => child.name === 'thead');
+      const tbody = node.children.find((child) => child.name === 'tbody');
+      const tfoot = node.children.find((child) => child.name === 'tfoot');
+
+      const headerCells = thead ? thead.children.find((child) => child.name === 'tr').children.filter((child) => child.name === 'th') : [];
+      const rows = tbody ? tbody.children.filter((child) => child.name === 'tr') : [];
+      const footerCells = tfoot ? tfoot.children.find((child) => child.name === 'tr') : [];
+
+      return (
+        <Table size="small" sx={{ mt: 1, width: 'fit-content' }}>
+          <TableHead>
+            <TableRow>
+              {headerCells.map((child) => (
+                <TableCell>{domToReact(child.children)}</TableCell>
+              ))}
+            </TableRow>
+          </TableHead>
+          <TableBody>
+            {rows.map((row) => (
+              <TableRow>
+                {row.children.filter((child) => child.name === 'td').map((cell) => (
+                  <TableCell>{domToReact(cell.children)}</TableCell>
+                ))}
+              </TableRow>
+            ))}
+          </TableBody>
+          <TableFooter>
+            {footerCells.map((row) => (
+              <TableRow>
+                {row.children.filter((child) => child.name === 'td').map((cell) => (
+                  <TableCell>{domToReact(cell.children)}</TableCell>
+                ))}
+              </TableRow>
+            ))}
+          </TableFooter>
+        </Table>
+      );
+    }
+
+    default: {
       return undefined;
+    }
   }
 };

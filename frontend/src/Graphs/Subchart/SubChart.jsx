@@ -181,7 +181,6 @@ export default function SubChart(props) {
     const dataColumns = allInitialColumns.filter((col, index) => {
       return col.role === 'data' && options.series?.[index - 1]?.visibleInLegend !== false;
     });
-    console.log(dataColumns)
     setDataColumns(dataColumns);
   };
 
@@ -315,6 +314,7 @@ export default function SubChart(props) {
       className={className}
       position="relative"
       height="100%"
+      minHeight={chartData.chartType === 'Calendar' && '200px'}
     >
       {/* Conditionally display loading animation here */}
       {isFirstRender && (

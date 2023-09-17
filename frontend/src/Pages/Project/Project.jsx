@@ -6,14 +6,13 @@ import { LinkContext } from '../../ContextProviders/LinkContext';
 import { TabContext } from '../../ContextProviders/TabContext';
 import parse from 'html-react-parser';
 import ChartComponent from '../../Graphs/ChartComponent';
-import SampleDataTable from '../../Graphs/SampleDataTable';
 import UppercaseTitle from '../../Components/UppercaseTitle';
 import CommentSection from '../../Components/CommentSection';
 import { Box, Typography, Container, Divider, Chip, Grid, Tooltip } from '@mui/material';
 
-import GetInTouch from '../Home/GetInTouch';
+import { useTheme } from '@mui/material/styles';
 
-import ExpandableSection from './ExpandableSection';
+import GetInTouch from '../Home/GetInTouch';
 
 import ThemePreferences from '../../Themes/ThemePreferences';
 
@@ -29,7 +28,7 @@ import BarChartIcon from '@mui/icons-material/BarChart';
 import CommentIcon from '@mui/icons-material/Comment';
 
 import { replacePlainHTMLWithMuiComponents } from '../../Utils/Utils';
-import { DatasetDownloadButton } from './DatasetDownloadButton';
+import DatasetDownloadDialog from '../../Components/DatasetDownload/DatasetDownloadDialog';
 
 import { scrollToSection } from '../../Components/Header/MenuItemAsNavLink';
 import FullWidthBox from '../../Components/FullWidthBox';
@@ -46,7 +45,7 @@ import ChartSubstituteComponentLoader from '../../Graphs/ChartSubstituteComponen
 const CustomChip = (props) => {
   const { tooltipTitle, ...otherProps } = props;
   return (
-    <Tooltip title={tooltipTitle}>
+    <Tooltip title={tooltipTitle} enterDelay={0} leaveDelay={200}>
       <Chip
         size="small"
         {...otherProps}
@@ -97,6 +96,8 @@ const Project = ({ themePreference }) => {
 
   }, [id, setCurrentPage, setChartsTitlesList]);
 
+  const theme = useTheme();
+
   return (
     <>
       {loading && (
@@ -111,12 +112,19 @@ const Project = ({ themePreference }) => {
               <UppercaseTitle text={project.title} />
 
               <Grid container spacing={1} sx={{ pb: 3, mt: -3 }}>
-                <Grid item>
-                  <CustomChip
-                    icon={<PersonIcon />}
-                    label={project.owner}
-                    tooltipTitle="Dataset Owner" />
-                </Grid>
+                {
+                  project.owners.map((owner, index) => (
+                    <Grid item>
+                      <CustomChip
+                        key={index}
+                        icon={<PersonIcon />}
+                        label={owner}
+                        tooltipTitle="Dataset Owner"
+                      />
+                    </Grid>
+                  ))
+                }
+
                 <Grid item>
                   <CustomChip
                     icon={<EmailIcon />}
@@ -175,9 +183,14 @@ const Project = ({ themePreference }) => {
               </Grid>
 
               <Typography
+                component="div"
                 variant="body1"
                 color="text.secondary"
-                sx={{ textAlign: 'justify', pb: 3, mb: 0 }}
+                sx={{
+                  textAlign: 'justify', pb: 3, mb: 0, "& table *": {
+                    color: `${theme.palette.text.secondary}`
+                  }
+                }}
                 gutterBottom
               >
                 {parse(project.description, {
@@ -185,9 +198,9 @@ const Project = ({ themePreference }) => {
                 })}
               </Typography>
 
-              <DatasetDownloadButton project={project} />
+              <DatasetDownloadDialog project={project} />
 
-              <ExpandableSection
+              {/* <ExpandableSection
                 title="Sample Data"
                 content={
                   <>
@@ -200,7 +213,7 @@ const Project = ({ themePreference }) => {
                     ))}
                   </>
                 }
-              />
+              /> */}
             </Container>
           </FullWidthBox>
 
@@ -237,6 +250,7 @@ const Project = ({ themePreference }) => {
 
                   <Box sx={{ my: 3 }}>
                     <Typography
+                      component="div"
                       variant="body1"
                       color="text.secondary"
                     >

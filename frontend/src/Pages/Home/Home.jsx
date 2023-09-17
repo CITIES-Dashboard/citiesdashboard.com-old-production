@@ -83,7 +83,7 @@ function Home({ themePreference, title }) {
                     <Divider />
                     <CardContent>
                       <Grid container justifyContent="space-between" alignItems="end">
-                        <Grid item>
+                        <Grid item xs={10}>
                           <Typography
                             variant="body1"
                             component="div"
@@ -92,16 +92,26 @@ function Home({ themePreference, title }) {
                           >
                             {project.title}
                           </Typography>
-                          <Typography variant="caption" color="text.secondary">
-                            {project.owner}
+                          <Typography
+                            component="div"
+                            variant="caption"
+                            color="text.secondary"
+                            sx={{
+                              whiteSpace: 'nowrap',
+                              overflow: 'hidden',
+                              textOverflow: 'ellipsis',
+                              pr: 1
+                            }}
+                          >
+                            {project?.owners?.join(', ')}
                           </Typography>
                         </Grid>
                         {
                           project.isActive
                           && (
-                            <Grid item>
+                            <Grid item xs={2}>
                               <Stack direction="row" spacing={1.5}>
-                                <Tooltip title="Number of Charts">
+                                <Tooltip title="Number of Charts" enterDelay={0} leaveDelay={200}>
                                   <Stack direction="row" spacing={0.2} alignItems="center">
                                     <BarChartIcon sx={{ fontSize: '0.75rem', color: 'text.secondary' }} />
                                     <Typography variant="caption" color="text.secondary">
@@ -110,7 +120,7 @@ function Home({ themePreference, title }) {
                                   </Stack>
                                 </Tooltip>
                                 {(commentCounts[key] != null) && (
-                                  <Tooltip title="Number of Comments">
+                                  <Tooltip title="Number of Comments" enterDelay={0} leaveDelay={200}>
                                     <Stack direction="row" spacing={0.2} alignItems="center">
                                       <CommentIcon sx={{ fontSize: '0.75rem', color: 'text.secondary' }} />
                                       <Typography variant="caption" color="text.secondary">
