@@ -147,13 +147,16 @@ function Home({ themePreference, title }) {
       <Divider />
 
       <FullWidthBox id={jsonData.about.id} sx={{ pt: 3, pb: 4 }}>
-        <About />
-      </FullWidthBox>
-
-      <Divider />
-
-      <FullWidthBox id={jsonData.getInTouch.id} sx={{ pt: 3, pb: 4 }}>
-        <GetInTouch />
+        <Container>
+          <Grid container spacing={3}>
+            <Grid item md={5} id={jsonData.about.id}>
+              <About />
+            </Grid>
+            <Grid item md={7} id={jsonData.getInTouch.id}>
+              <GetInTouch />
+            </Grid>
+          </Grid>
+        </Container>
       </FullWidthBox>
     </Box>
   );

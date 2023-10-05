@@ -1,5 +1,5 @@
 import { Link, List, ListItem, ListItemText, Table, TableBody, TableCell, TableHead, TableRow, styled, TableFooter } from '@mui/material';
-import parse, { domToReact } from 'html-react-parser';
+import { domToReact } from 'html-react-parser';
 
 // Function to replace characters like "-" with " " from a string and capitalize it
 export const capitalizePhrase = (str) => {
@@ -31,9 +31,14 @@ const StyleListItem = styled(ListItem)(() => ({
   paddingLeft: '0.25rem'
 }));
 
-// Function to replace HTML tags with MUI components
 export const replacePlainHTMLWithMuiComponents = (node) => {
   if (node.type !== 'tag') return undefined;
+
+  const options = {
+    replace: replacePlainHTMLWithMuiComponents
+  };
+
+  const parseChildren = (children) => children.map((child, index) => domToReact([child], { ...options, key: `child-${index}` }));
 
   switch (node.name) {
     case 'a': {
@@ -44,7 +49,7 @@ export const replacePlainHTMLWithMuiComponents = (node) => {
           rel="noopener noreferrer"
           underline="hover"
         >
-          {node.children && node.children.length > 0 && parse(node.children[0].data)}
+          {parseChildren(node.children)}
         </Link>
       );
     }
@@ -52,9 +57,9 @@ export const replacePlainHTMLWithMuiComponents = (node) => {
     case 'ul': {
       return (
         <List dense sx={{ listStyleType: htmlOrderedListTypeToMUIListStyle.disc, paddingLeft: 4, paddingTop: '6px' }}>
-          {node.children.map((child) => (
-            <StyleListItem>
-              <ListItemText primary={domToReact(child.children)} />
+          {node.children.map((child, index) => (
+            <StyleListItem key={`ul-item-${index}`}>
+              <ListItemText primary={parseChildren(child.children)} />
             </StyleListItem>
           ))}
         </List>
@@ -64,9 +69,9 @@ export const replacePlainHTMLWithMuiComponents = (node) => {
     case 'ol': {
       return (
         <List dense sx={{ listStyleType: htmlOrderedListTypeToMUIListStyle[node.attribs.type], paddingLeft: 4, paddingTop: '6px' }}>
-          {node.children.map((child) => (
-            <StyleListItem>
-              <ListItemText primary={domToReact(child.children)} />
+          {node.children.map((child, index) => (
+            <StyleListItem key={`ol-item-${index}`}>
+              <ListItemText primary={parseChildren(child.children)} />
             </StyleListItem>
           ))}
         </List>
@@ -80,33 +85,29 @@ export const replacePlainHTMLWithMuiComponents = (node) => {
 
       const headerCells = thead ? thead.children.find((child) => child.name === 'tr').children.filter((child) => child.name === 'th') : [];
       const rows = tbody ? tbody.children.filter((child) => child.name === 'tr') : [];
-      const footerCells = tfoot ? tfoot.children.find((child) => child.name === 'tr') : [];
+      const footerCells = tfoot ? tfoot.children.find((child) => child.name === 'tr').children.filter((child) => child.name === 'td') : [];
 
       return (
         <Table size="small" sx={{ mt: 1, width: 'fit-content' }}>
           <TableHead>
             <TableRow>
-              {headerCells.map((child) => (
-                <TableCell>{domToReact(child.children)}</TableCell>
+              {headerCells.map((child, index) => (
+                <TableCell key={`headerCell-${index}`}>{domToReact(child.children)}</TableCell>
               ))}
             </TableRow>
           </TableHead>
           <TableBody>
-            {rows.map((row) => (
-              <TableRow>
-                {row.children.filter((child) => child.name === 'td').map((cell) => (
-                  <TableCell>{domToReact(cell.children)}</TableCell>
+            {rows.map((row, rowIndex) => (
+              <TableRow key={`row-${rowIndex}`}>
+                {row.children.filter((child) => child.name === 'td').map((cell, cellIndex) => (
+                  <TableCell key={`cell-${rowIndex}-${cellIndex}`}>{domToReact(cell.children)}</TableCell>
                 ))}
               </TableRow>
             ))}
           </TableBody>
           <TableFooter>
-            {footerCells.map((row) => (
-              <TableRow>
-                {row.children.filter((child) => child.name === 'td').map((cell) => (
-                  <TableCell>{domToReact(cell.children)}</TableCell>
-                ))}
-              </TableRow>
+            {footerCells.map((child, index) => (
+              <TableCell key={`footerCell-${index}`}>{domToReact(child.children)}</TableCell>
             ))}
           </TableFooter>
         </Table>

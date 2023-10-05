@@ -12,8 +12,6 @@ import { Box, Typography, Container, Divider, Chip, Grid, Tooltip } from '@mui/m
 
 import { useTheme } from '@mui/material/styles';
 
-import GetInTouch from '../Home/GetInTouch';
-
 import ThemePreferences from '../../Themes/ThemePreferences';
 
 import AirQualityIndexLegendQuickGlance from '../../Components/AirQualityHelper';
@@ -40,6 +38,8 @@ import { CommentCountsContext } from '../../ContextProviders/CommentCountsContex
 import { SheetsDataContext } from '../../ContextProviders/SheetsDataContext';
 
 import ChartSubstituteComponentLoader from '../../Graphs/ChartSubstituteComponents/ChartSubstituteComponentLoader';
+
+import CollapsibleSubtitle from '../../Components/CollapsibleSubtitle';
 
 // Custom Chip component to display metadata
 const CustomChip = (props) => {
@@ -106,8 +106,8 @@ const Project = ({ themePreference }) => {
             project.id === 'air-quality' && <AirQualityIndexLegendQuickGlance />
           }
 
-          <FullWidthBox>
-            <Container sx={{ pt: 4, pb: 4 }}>
+          <FullWidthBox backgroundColor='customAlternateBackground'>
+            <Container sx={{ pt: 5, pb: 3 }}>
 
               <UppercaseTitle text={project.title} />
 
@@ -199,21 +199,6 @@ const Project = ({ themePreference }) => {
               </Typography>
 
               <DatasetDownloadDialog project={project} />
-
-              {/* <ExpandableSection
-                title="Sample Data"
-                content={
-                  <>
-                    {project.rawDataTables.map((element, index) => (
-                      <SampleDataTable
-                        key={index}
-                        chartData={{ sheetId: project.sheetId, ...element }}
-                        marginBottom={(index < project.rawDataTables.length - 1) ? 3 : 1}
-                      />
-                    ))}
-                  </>
-                }
-              /> */}
             </Container>
           </FullWidthBox>
 
@@ -223,7 +208,7 @@ const Project = ({ themePreference }) => {
                 id={chartsTitlesList[index].chartID} // set the chartWrapper's ID to help Navbar in Header scroll to
                 key={index}
                 backgroundColor={
-                  index % 2 == 0 ? 'customAlternateBackground' : ''
+                  index % 2 != 0 && 'customAlternateBackground'
                 }
               >
                 <Container
@@ -247,39 +232,27 @@ const Project = ({ themePreference }) => {
                         }}
                       />
                     )}
-
                   <Box sx={{ my: 3 }}>
                     <Typography
                       component="div"
                       variant="body1"
                       color="text.secondary"
+                      sx={{ mb: 1 }}
                     >
-                      {element.subtitle && parse(element.subtitle, {
-                        replace: replacePlainHTMLWithMuiComponents,
-                      })}
+                      {element.subtitle &&
+                        <CollapsibleSubtitle
+                          text={element.subtitle}
+                          reference={element.reference ? element.reference : undefined}
+                        />
+                      }
                       {Object.keys(tab)[index] == index &&
                         element.subcharts &&
-                        element.subcharts[Object.values(tab)[index]]
-                          .subchartSubtitle &&
-                        parse(
-                          element.subcharts[Object.values(tab)[index]]
-                            .subchartSubtitle, {
-                          replace: replacePlainHTMLWithMuiComponents,
-                        }
-                        )}
-                    </Typography>
-                    <Typography variant="caption" color="text.secondary">
-                      {element.reference && parse(element.reference, {
-                        replace: replacePlainHTMLWithMuiComponents,
-                      })}
-                      {Object.keys(tab)[index] == index &&
-                        element.subcharts &&
-                        element.subcharts[Object.values(tab)[index]].reference &&
-                        parse(
-                          element.subcharts[Object.values(tab)[index]].reference, {
-                          replace: replacePlainHTMLWithMuiComponents,
-                        }
-                        )}
+                        element.subcharts[Object.values(tab)[index]].subchartSubtitle &&
+                        <CollapsibleSubtitle
+                          text={element.subcharts[Object.values(tab)[index]].subchartSubtitle}
+                          reference={element.subcharts[Object.values(tab)[index]].reference ? element.subcharts[Object.values(tab)[index]].reference : undefined}
+                        />
+                      }
                     </Typography>
                   </Box>
                 </Container>
@@ -291,12 +264,6 @@ const Project = ({ themePreference }) => {
 
           <FullWidthBox id={jsonData.commentSection.id} sx={{ pt: 3, pb: 4 }}>
             <CommentSection pageID={project.id} />
-          </FullWidthBox>
-
-          <Divider />
-
-          <FullWidthBox id={jsonData.getInTouch.id} sx={{ pt: 3, pb: 4 }}>
-            <GetInTouch />
           </FullWidthBox>
         </Box>
       )}

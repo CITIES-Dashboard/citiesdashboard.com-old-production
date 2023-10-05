@@ -1,11 +1,12 @@
 import { useState, useContext } from 'react';
 import { styled } from '@mui/material/styles';
-import { Tooltip, Box, Typography, Container, Paper, AppBar, Toolbar, useScrollTrigger, Slide, Stack, Drawer, Divider } from '@mui/material';
+import { Link, Tooltip, Box, Typography, Container, Paper, AppBar, Toolbar, useScrollTrigger, Slide, Stack, Drawer, Divider } from '@mui/material';
 import IconButton from '@mui/material/IconButton';
 import MenuIcon from '@mui/icons-material/Menu';
 import SettingsIcon from '@mui/icons-material/Settings';
 
 import parse from 'html-react-parser';
+import * as Tracking from '../../Utils/Tracking';
 
 import { LinkContext } from '../../ContextProviders/LinkContext';
 import FullWidthBox from '../FullWidthBox';
@@ -24,7 +25,6 @@ export const showInMobile = (defaultDisplay) => ({ display: { xs: (defaultDispla
 export const showInDesktop = (defaultDisplay) => ({ display: { xs: 'none', lg: (defaultDisplay || 'block') } });
 
 const toolBarHeightInRem = 3;
-const topAnchorID = 'top-anchor';
 
 const StyledAppBar = styled(AppBar)(() => ({
   boxShadow: 'none',
@@ -79,17 +79,23 @@ export default function Header(props) {
                     borderRadius: '0.5rem',
                     transition: '0.2s ease-in-out',
                     '&:hover': { transform: 'scale(1.1)' },
+                    mr: 2
                   }}
                 >
                   <CITIESlogoLinkToHome />
                 </Paper>
 
-                <Stack direction="row" alignItems="center" justifyContent="flex-end" height="100%" spacing={2}>
-
+                <Stack
+                  direction="row"
+                  alignItems="center"
+                  justifyContent="flex-end"
+                  width="100%"
+                  height="100%"
+                >
                   {/* Navbar in landscape placed here, will be hidden in mobile  */}
-                  <Box sx={{ ...showInDesktop('block'), height: '100%' }}>
+                  {/* <Box sx={{ ...showInDesktop('block'), height: '100%' }}>
                     <NavBar currentPage={currentPage} />
-                  </Box>
+                  </Box> */}
 
                   <Tooltip title="Navigation Menu" enterDelay={0} leaveDelay={200}>
                     <IconButton
@@ -134,7 +140,7 @@ export default function Header(props) {
         >
           <Stack onClick={handleDrawerToggle}>
             {/* // Only show the NavBar here in mobile  */}
-            <Box sx={showInMobile('block')}>
+            {/* <Box sx={showInMobile('block')}>
               <Container sx={{ py: 2 }}>
                 <Typography variant="h6" color="text.secondary" fontWeight="medium" gutterBottom>
                   CITIES Dashboard
@@ -142,7 +148,7 @@ export default function Header(props) {
                 <NavBar currentPage={currentPage} />
               </Container>
               <Divider />
-            </Box>
+            </Box> */}
 
             <Container sx={{ pt: 2, pb: 3 }}>
               <Typography variant="h6" color="text.secondary" fontWeight="medium" gutterBottom>
@@ -161,36 +167,64 @@ export default function Header(props) {
       This can cause some part of your content to be invisible,
       behind the app bar. Here is how to fix:
       You can render a second <Toolbar /> component: */}
+
       <Toolbar
-        id={topAnchorID}
+        id={jsonData.topAnchor.id}
         sx={{ backgroundColor: 'customAlternateBackground', height: `${toolBarHeightInRem * 1.5}rem` }}
       />
 
-      <FullWidthBox sx={{
-        width: '100%',
-        pt: 4,
-        pb: 3,
-        backgroundColor: 'customAlternateBackground'
-      }}
-      >
-        <Container>
-          <Typography
-            variant="h3"
-            color="text.primary"
-            fontWeight="medium"
+      {(
+        currentPage === 'home'
+        && (
+          <FullWidthBox sx={{
+            width: '100%',
+            pt: 4,
+            pb: 3,
+            backgroundColor: 'customAlternateBackground'
+          }}
           >
-            CITIES DASHBOARD
-          </Typography>
+            <Container>
+              <Typography
+                variant="h3"
+                color="text.primary"
+                fontWeight="medium"
+              >
+                CITIES DASHBOARD
+              </Typography>
+              <Typography variant="body1" color="text.secondary" gutterBottom>
+                {parse(jsonData.siteDescription, {
+                  replace: replacePlainHTMLWithMuiComponents,
+                })}
+                <br />
+                <Link
+                  href={`#${jsonData.getInTouch.id}`}
+                  underline="hover"
+                  onClick={(e) => {
+                    // Smooth scrolling
+                    e.preventDefault();
+                    const section = document.getElementById(jsonData.getInTouch.id);
+                    if (section) {
+                      section.scrollIntoView({ behavior: 'smooth' });
+                    }
 
-          <Typography variant="body1" color="text.secondary">
-            {parse(jsonData.siteDescription, {
-              replace: replacePlainHTMLWithMuiComponents,
-            })}
-          </Typography>
-        </Container>
-      </FullWidthBox>
+                    Tracking.sendEventAnalytics(
+                      Tracking.Events.internalNavigation,
+                      {
+                        destination_id: jsonData.getInTouch.id,
+                        origin_id: 'header'
+                      }
+                    );
+                  }}
+                >
+                  Reach out to get involved!
+                </Link>
+              </Typography>
+            </Container>
+          </FullWidthBox>
+        )
+      )}
 
-      <SpeedDialButton chartsTitlesList={chartsTitlesList} topAnchorID={topAnchorID} />
+      <SpeedDialButton chartsTitlesList={chartsTitlesList} topAnchorID={jsonData.topAnchor.id} />
 
     </>
   );

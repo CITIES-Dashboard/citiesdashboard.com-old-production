@@ -1,12 +1,11 @@
 // disable eslint for this file
 /* eslint-disable */
 import { useState, useEffect, useContext } from 'react';
-import { Avatar, Tooltip, Box, Link, Typography, Stack, Select, FormControl, MenuItem, Grid, Chip, Dialog, Button, DialogActions, DialogContent, useMediaQuery, Table, TableBody, TableCell, TableHead, TableRow } from '@mui/material';
+import { Container, Avatar, Modal, Tooltip, Box, Link, Typography, Stack, Select, FormControl, MenuItem, Grid, Chip, Dialog, Button, DialogActions, DialogContent, useMediaQuery, Table, TableBody, TableCell, TableHead, TableRow } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
 
 import { RawDatasetsMetadataContext } from '../../ContextProviders/RawDatasetsMetadataContext';
 
-import VisibilityIcon from '@mui/icons-material/Visibility';
 import DownloadIcon from '@mui/icons-material/Download';
 import DataObjectIcon from '@mui/icons-material/DataObject';
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
@@ -91,10 +90,11 @@ export default function DatasetDownloadDialog(props) {
           <Typography variant="h6" >
             Preview and download raw dataset(s)
           </Typography>
+
           <DatasetSelectorAndPreviewer datasets={datasets} smallScreen={smallScreen} project={project} />
           {
             datasets &&
-            <Typography variant="caption" sx={{ mb: 3, fontStyle: 'italic' }} >
+            <Typography variant="caption" sx={{ my: 3, fontStyle: 'italic' }} >
               This dataset is provided by the CITIES Dashboard with the support of {getOwnerString(project.owners)}. Should you intend to utilize this dataset for your project, research, or publication, we kindly request that you notify us at <Link href='mailto:nyuad.cities@nyu.edu'>nyuad.cities@nyu.edu</Link> to discuss citation requirements.
             </Typography>
           }
@@ -132,15 +132,13 @@ const DatasetSelectorAndPreviewer = (props) => {
           setPreviewingDatasetId={setPreviewingDatasetId}
         />
       </Grid>
-      <Grid item sm={12} md={6} maxWidth={smallScreen ? '100%' : 'unset'}>
+      <Grid item sm={12} md={6} maxWidth={smallScreen ? '100%' : 'unset'} sx={{ mt: 1 }}>
         <PreviewDataset
           previewingDataset={previewingDataset}
           previewingDatasetId={previewingDatasetId}
           project={project}
           smallScreen={smallScreen}
         />
-      </Grid>
-      <Grid item>
       </Grid>
     </Grid>
   )
@@ -172,6 +170,7 @@ const DatasetsTable = (props) => {
       <TableBody>
         {datasets?.map((dataset) => (
           <Dataset
+          key={dataset.id}
             smallScreen={smallScreen}
             dataset={dataset}
             previewingDataset={previewingDataset}
@@ -186,7 +185,7 @@ const DatasetsTable = (props) => {
 }
 
 const Dataset = (props) => {
-  const { dataset, setPreviewingDataset, isPreviewing, previewingDatasetId, setPreviewingDatasetId } = props;
+  const { smallScreen, dataset, setPreviewingDataset, isPreviewing, previewingDatasetId, setPreviewingDatasetId } = props;
 
   const [fetchedDatasets, setFetchedDatasets] = useState({});
   const NUM_RECENT_VERSIONS = 3;
@@ -286,10 +285,25 @@ const Dataset = (props) => {
         </TableCell>
 
         <TableCell sx={{ position: 'relative', background: isPreviewing && theme.palette.background.NYUpurpleLight }}>
-          {showCalendar && <DatasetCalendar
-            onChange={handleCalendarChange}
-            versions={dataset?.versions}
-          />}
+          {showCalendar &&
+            (smallScreen ? <Modal
+              open={showCalendar}
+              sx={{
+                display: 'flex',
+                justifyContent: 'center',
+                alignItems: 'center'
+              }}
+            >
+              <DatasetCalendar
+                onChange={handleCalendarChange}
+                smallScreen={smallScreen}
+                versions={dataset?.versions}
+              />
+            </Modal>
+              : <DatasetCalendar
+                onChange={handleCalendarChange}
+                versions={dataset?.versions}
+              />)}
           <FormControl size="small">
             <Select
               value={selectedVersionOfThisDataset?.version}
@@ -435,19 +449,14 @@ const PreviewDataset = (props) => {
   return (
     <Stack spacing={1}>
       <Box sx={{ '& *': { fontFamily: "monospace !important" } }}>
-        <Chip
-          icon={<VisibilityIcon />}
-          label={`Previewing${previewingDataset && `: ${previewingDataset.name} (${previewingDataset?.version})`}`}
-          size="small"
-          sx={{
-            backgroundColor: theme.palette.customBackground,
-            borderRadius: 0,
-            borderTopLeftRadius: theme.spacing(1),
-            borderTopRightRadius: theme.spacing(1),
-            p: 1,
-            pb: 0,
-          }}
-        />
+        <Stack direction="row">
+          <Typography variant='body2' gutterBottom fontWeight={600}>
+            {previewingDataset ?
+              `Previewing: ${previewingDataset.name} (${previewingDataset?.version})`
+              : 'Not previewing any dataset'}
+          </Typography>
+        </Stack>
+
         <Box
           component="pre"
           sx={{
