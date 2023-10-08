@@ -4,7 +4,7 @@ import { useState, useEffect, useContext } from 'react';
 
 import { GoogleContext } from '../../ContextProviders/GoogleContext';
 
-import { Box, Stack } from '@mui/material/';
+import { Box, Stack, Tooltip, Typography } from '@mui/material/';
 
 import { useTheme } from '@mui/material/styles';
 import HeatMap from '../HeatMap';
@@ -17,6 +17,9 @@ import GoogleChartStyleWrapper from './GoogleChartStyleWrapper';
 import LoadingAnimation from '../../Components/LoadingAnimation';
 
 import ChartSubstituteComponentLoader from '../ChartSubstituteComponents/ChartSubstituteComponentLoader';
+
+import { isMobile } from 'react-device-detect';
+
 
 export default function SubChart(props) {
   // Props
@@ -363,6 +366,66 @@ export default function SubChart(props) {
     }
   }, [google]);
 
+  const [tooltipOpen, setTooltipOpen] = useState(false);
+  const [tooltipClosed, setTooltipClosed] = useState(false);
+
+  const handleControlBoxClick = () => {
+    setTooltipOpen(false);
+    setTooltipClosed(true);
+  };
+
+  const renderChartControlBox = () => {
+    const shouldShowTooltip = !tooltipClosed && !isMobile; // No tooltip on mobile devices
+    const rangeFilterTooltipText = 'Use the sliders to interact with the graph';
+
+    const chartControlBox = (
+      <Box
+        id={`control-${chartID}`}
+        sx={{
+          height: `calc(${height} / 8)`,
+          mt: 1,
+          opacity: 0.8,
+          filter: 'saturate(0.3)'
+        }}
+        // hide tooltip on click or drag
+        onClick={handleControlBoxClick}
+        // show tooltip on hover if it hasn't been closed
+        onMouseEnter={() => shouldShowTooltip && setTooltipOpen(true)}
+      />
+    );
+
+    // If the control type isn't "ChartRangeFilter"
+    // render the box containing chart control(s) without any Tooltip or Typography
+    if (chartControl.controlType !== "ChartRangeFilter") {
+      return chartControlBox;
+    }
+
+    // For "ChartRangeFilter", conditionally render the Tooltip and Typography based on device type
+    return (
+      <>
+        {isMobile && !isFirstRender && (
+          <Typography
+            variant="caption"
+            color={theme.palette.text.secondary}
+            sx={{ textAlign: 'center', mt: 1 }}
+          >
+            {rangeFilterTooltipText}
+          </Typography>
+        )}
+        <Tooltip
+          title={rangeFilterTooltipText}
+          placement="bottom"
+          arrow
+          open={tooltipOpen}
+          onClose={() => setTooltipOpen(false)}
+        >
+          {chartControlBox}
+        </Tooltip>
+      </>
+    );
+  };
+
+
   const renderChart = () => {
     if (hasChartControl) {
       return (
@@ -371,20 +434,13 @@ export default function SubChart(props) {
           direction={ChartControlType[chartControl.controlType]?.stackDirection || 'column-reverse'}
           sx={{ height: '100%' }}
         >
-          <Box
-            id={`control-${chartID}`}
-            sx={{
-              height: `calc(${height} / 8)`,
-              opacity: 0.8,
-              filter: 'saturate(0.3)'
-            }}
-          />
+          {renderChartControlBox()}
           <Box id={chartID} sx={{ height: height, maxHeight: maxHeight }} />
         </Stack>
-      )
+      );
     }
-    else return <Box id={chartID} sx={{ height: height, maxHeight: maxHeight }} />;
-  }
+    return <Box id={chartID} sx={{ height: height, maxHeight: maxHeight }} />;
+  };
 
   const onChartReady = () => {
     if (chartData.chartType === 'Calendar') {
