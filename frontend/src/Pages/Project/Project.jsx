@@ -57,7 +57,7 @@ const CustomChip = (props) => {
 const Project = ({ themePreference }) => {
   const [_, setCurrentPage, chartsTitlesList, setChartsTitlesList] = useContext(LinkContext);
 
-  let { id } = useParams();
+  const { id } = useParams();
   const [project, setProject] = useState({});
   const [loading, setLoading] = useState(false);
   const [tab, setTab] = useContext(TabContext);
@@ -167,7 +167,7 @@ const Project = ({ themePreference }) => {
                   <Grid item>
                     <CustomChip
                       icon={<CommentIcon />}
-                      label={`${commentCount} Comment${commentCounts[project.id] > 1 ? "s" : ""}`}
+                      label={`${commentCount} Comment${commentCount > 1 ? "s" : ""}`}
                       tooltipTitle="Number of Comments"
                       onClick={() => {
                         scrollToSection(jsonData.commentSection.id);
