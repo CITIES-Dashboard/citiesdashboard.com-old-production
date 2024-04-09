@@ -17,15 +17,10 @@ const ChartStyleWrapper = styled(Box)(({ theme }) => ({
       filter: 'invert(0.848) hue-rotate(180deg)',
     }
   }),
-  // Special CSS for historical-snapshot-aqi chart
-  '& .historical-snapshot-aqi svg [clip-path*="ABSTRACT_RENDERER"] > g:nth-of-type(1), .historical-snapshot-aqi [id*="googlechart-control"] svg [clip-path*="ABSTRACT_RENDERER"] > g:nth-of-type(2)': {
-    opacity: 0.6
-  },
   // Center Calendar chart in wrapper
   '& .Calendar [dir]:not(:empty)': {
     margin: 'auto'
   },
-
   // add horizontal scrollbar to Calendar charts
   '& .Calendar > div > div:last-of-type > div': {
     overflowX: 'auto',
@@ -104,8 +99,8 @@ function ChartComponent({ chartData: passedChartData, chartHeight: passedChartHe
     chartMaxHeight = isPortrait ? '800px' : '500px';
   }
 
-  // Assign the subcharts array for HeatMap based on the device orientation
-  if (chartData.chartType === 'HeatMap') {
+  // Assign the subcharts array for GoogleSheetEmbedVisualization based on the device orientation
+  if (chartData.chartType === 'GoogleSheetEmbedVisualization') {
     chartData = {
       ...chartData,
       ...chartData[isPortrait ? 'subchartsPortrait' : 'subchartsLandscape'],
@@ -135,7 +130,7 @@ function ChartComponent({ chartData: passedChartData, chartHeight: passedChartHe
           windowSize={windowSize}
           height={chartData.height ? chartData.height : chartHeight}
           maxHeight={
-            chartData.chartType === 'HeatMap' ? '' : chartMaxHeight
+            chartData.chartType === 'GoogleSheetEmbedVisualization' ? '' : chartMaxHeight
           }
         />
       );
@@ -185,7 +180,7 @@ function ChartComponent({ chartData: passedChartData, chartHeight: passedChartHe
                   windowSize={windowSize}
                   height={chartData.height ? chartData.height : chartHeight}
                   maxHeight={
-                    ['HeatMap', 'Calendar'].includes(chartData.chartType)
+                    ['GoogleSheetEmbedVisualization', 'Calendar'].includes(chartData.chartType)
                       ? ''
                       : chartMaxHeight
                   }
@@ -206,7 +201,7 @@ function ChartComponent({ chartData: passedChartData, chartHeight: passedChartHe
         windowSize={windowSize}
         height={chartData.height ? chartData.height : chartHeight}
         maxHeight={
-          chartData.chartType === 'HeatMap' ? '' : chartMaxHeight
+          chartData.chartType === 'GoogleSheetEmbedVisualization' ? '' : chartMaxHeight
         }
       />
     );
