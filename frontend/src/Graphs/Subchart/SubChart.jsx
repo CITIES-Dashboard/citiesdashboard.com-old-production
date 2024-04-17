@@ -68,7 +68,8 @@ function SubChart(props) {
   }
 
   // Use GoogleContext for loading and manipulating the Google Charts
-  const [google, _] = useContext(GoogleContext);
+  const google = useContext(GoogleContext);
+
   // Get the current theme
   const theme = useTheme();
 
@@ -562,7 +563,7 @@ function SubChart(props) {
       sx={{
         height: `calc(${height} / 8)`,
         mt: 1,
-        opacity: 0.8,
+        opacity: chartControl?.controlType === 'ChartRangeFilter' ? 0.8 : 1,
         filter: 'saturate(0.3)'
       }}
       // Disable tooltip on click or drag
