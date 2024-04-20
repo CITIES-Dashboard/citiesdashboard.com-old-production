@@ -313,7 +313,8 @@ export const returnChartControlUI = (props) => {
         hAxis: {
           ...mainChartOptions.hAxis,
           textPosition: 'out',
-          textStyle: { color: theme.palette.chart.axisText, fontSize: returnResponsiveFontSizeInPixels({ isPortrait, isSmaller: true }) }
+          textStyle: { color: theme.palette.chart.axisText, fontSize: returnResponsiveFontSizeInPixels({ isPortrait, isSmaller: true }) },
+          title: null
         },
         vAxis: {
           ...mainChartOptions.vAxis,
