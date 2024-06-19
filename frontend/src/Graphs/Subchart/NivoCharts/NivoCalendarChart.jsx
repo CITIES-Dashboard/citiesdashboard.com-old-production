@@ -7,6 +7,9 @@ import { Box, Chip } from '@mui/material';
 import parse from 'html-react-parser';
 import { replacePlainHTMLWithMuiComponents } from '../../../Utils/Utils';
 
+import { generateDiscreteColorGradientArray, generateCssBackgroundGradient } from '../SubchartUtils/GradientUtils';
+import { calculateValueRange } from '../../NivoChartHelper';
+
 export const yearSpacing = 40;
 
 export const getCalendarChartMargin = (isPortrait) => {
@@ -15,12 +18,39 @@ export const getCalendarChartMargin = (isPortrait) => {
         : { top: 30, right: 40, bottom: 0, left: 40 }
 }
 
+export const calculateCalendarChartHeight = (yearRange, yearHeight, calendarChartMargin) => {
+    const numberOfYears = yearRange[1] - yearRange[0] + 1;
+    /**
+     * The height of the calendar chart's container should be made to fit at least two years of data
+     * This way, even if the yearRange (from the slider) is < 2 years, and the following subcharts
+     * don't make use of this yearRange (since they have <= 2 years of data), they will still render properly
+     */
+    const minYearsForHeightCalculation = 2;
+
+    return Math.max(numberOfYears, minYearsForHeightCalculation) * (yearHeight + yearSpacing) + calendarChartMargin.top + calendarChartMargin.bottom;
+};
+
 export const CalendarChart = (props) => {
-    const { data, dateRange, valueRange, isPortrait, options } = props;
+    const { data, dateRange, valueRange, yearRange, isPortrait, options } = props;
 
     const calendarChartMargin = getCalendarChartMargin(isPortrait);
 
     const theme = useTheme();
+
+    const dynamicFrom = `${yearRange[0]}-01-01`
+    const dynamicTo = `${yearRange[1]}-12-31`
+
+    // Filter data based on the selected year range
+    const filteredData = data.filter(item => {
+        const year = new Date(item.day).getFullYear();
+        return year >= yearRange[0] && year <= yearRange[1];
+    });
+
+    // Adjust the value range based on the filtered data
+    let filteredValueRange = valueRange
+    if (filteredData.length > 0) {
+        filteredValueRange = calculateValueRange(filteredData, options?.colorAxis)
+    }
 
     // Function to extract tooltip text from HTML tooltip
     const extractTooltipText = (tooltip) => {
@@ -48,16 +78,17 @@ export const CalendarChart = (props) => {
         return isFirstTwoDaysOfWeek && isInFirstYear;
     };
 
-    // Function to get color of the Calendar cells
-    const colors = options?.colorAxis?.isGradient ?
-        generateColorGradient(options?.colorAxis?.colors[0], options?.colorAxis?.colors[1], 100) :
-        options?.colorAxis?.colors;
+    const colors = generateDiscreteColorGradientArray({
+        colors: options?.colorAxis?.colors,
+        numSteps: options?.colorAxis?.gradientSteps
+    });
 
     const showLegend = () => {
         return (
-            <GradientBox
+            <ValueRangeBox
                 valueRange={valueRange}
-                colors={options?.colorAxis?.colors}
+                filteredValueRange={filteredValueRange}
+                colorAxis={options?.colorAxis}
                 isPortrait={isPortrait}
             />
         )
@@ -68,8 +99,8 @@ export const CalendarChart = (props) => {
             {options?.legend?.position !== "none" && showLegend()}
             <ResponsiveCalendar
                 data={data}
-                from={dateRange?.min}
-                to={dateRange?.max}
+                from={dynamicFrom}
+                to={dynamicTo}
                 emptyColor={'transparent'}
                 theme={{
                     text: {
@@ -99,8 +130,8 @@ export const CalendarChart = (props) => {
                     },
                 }}
                 colors={colors}
-                minValue={options?.colorAxis?.minValue}
-                maxValue={options?.colorAxis?.maxValue}
+                minValue={valueRange.min} // Using valueRange here so that the color gradient
+                maxValue={valueRange.max} // remains consistent even when yearRange changes
                 margin={calendarChartMargin}
                 yearSpacing={yearSpacing}
                 monthBorderColor={theme.palette.text.primary}
@@ -153,91 +184,83 @@ const CustomTooltip = ({ day, color, tooltipText, dateRange, inFirstTwoRowsOfCha
     );
 };
 
-const GradientBox = ({ valueRange, colors, isPortrait }) => {
-
+const ValueRangeBox = ({ valueRange, filteredValueRange, colorAxis, isPortrait }) => {
     if (valueRange?.min === null || valueRange?.max === null) return null;
+
+    const { colors, minValue, maxValue } = colorAxis;
+    let rangeBoxMinValue = minValue, rangeBoxMaxValue = maxValue;
+
+    if (minValue === undefined) rangeBoxMinValue = valueRange.min;
+    if (maxValue === undefined) rangeBoxMaxValue = valueRange.max;
+
+    if (valueRange.min < rangeBoxMinValue) rangeBoxMinValue = valueRange.min;
+    if (valueRange.max > rangeBoxMaxValue) rangeBoxMaxValue = valueRange.max;
 
     const theme = useTheme();
 
-    // Create a gradient string from all colors in the colors array
-    const gradient = colors.map((color, index, array) => {
-        // Calculate the percentage position for each color
-        const position = (index / (array.length - 1)) * 100;
-        return `${color} ${position}%`;
-    }).join(', ');
-
-    const containerStyle = {
-        position: 'sticky',
-        width: 'fit-content',
-        marginTop: '1rem',
-        left: (isPortrait ? 'calc(80dvw - 7rem)' : 'calc(80% + 1rem)'),
-    }
-
-    const gradientStyle = {
-        background: `linear-gradient(to right, ${gradient})`,
-        color: theme.palette.text.primary,
-        border: `1px solid ${theme.palette.text.primary}`,
-        minWidth: '150px',
-        height: '1.1rem',
-        maxHeight: '1.25rem',
-        display: 'flex',
-        justifyContent: 'space-between',
+    const calculateMarkerPositionOnRangeBox = (value) => {
+        const position = ((value - rangeBoxMinValue) / (rangeBoxMaxValue - rangeBoxMinValue)) * 100;
+        return `${position}%`;
     };
 
     const labelStyle = {
-        position: 'relative',
-        top: '-1.15rem',
-        fontSize: '0.8rem',
+        position: 'absolute',
+        fontSize: '0.75rem',
+        color: theme.palette.text.secondary,
+        lineHeight: 1,
+        textAlign: 'center',
+        transform: 'translateX(-50%)',
+        minWidth: '75px',
+        whiteSpace: 'nowrap',
+    };
+    const topLabelStyle = {
+        top: '-1.5rem',
+        transform: 'translateX(-50%)'
+    };
+    const bottomLabelStyle = {
+        bottom: '-1.25rem',
+        transform: isPortrait ? 'translateX(-100%)' : 'translateX(-50%)'
+    };
+
+    const triangleStyle = {
+        position: 'absolute',
+        width: 0,
+        height: 0,
+        borderLeft: '0.25rem solid transparent',
+        borderRight: '0.25rem solid transparent',
+        transform: 'translateX(-50%)',
+    };
+    const topTriangleStyle = {
+        top: '-0.5rem',
+        borderTop: `0.25rem solid ${theme.palette.text.secondary}`
+    };
+    const bottomTriangleStyle = {
+        bottom: '-0.5rem',
+        borderBottom: `0.25rem solid ${theme.palette.text.secondary}`
     };
 
     return (
-        <Box style={containerStyle}>
-            <Box style={gradientStyle}>
-                <span style={labelStyle}>{valueRange.min}</span>
-                <span style={labelStyle}>{valueRange.max}</span>
+        <Box sx={{
+            position: 'sticky',
+            width: 'fit-content',
+            marginTop: '1.5rem',
+            float: 'right',
+            right: (isPortrait ? '5px' : '50px')
+        }}>
+            <Box sx={{
+                background: generateCssBackgroundGradient({ gradientDirection: 'to right', colors: colors, optionalMaxValue: rangeBoxMaxValue }),
+                color: theme.palette.text.secondary,
+                border: `1px solid ${theme.palette.text.secondary}`,
+                width: isPortrait ? '250px' : '300px',
+                height: '1rem',
+                position: 'relative',
+                justifyContent: 'space-between',
+            }}>
+                <span style={{ ...labelStyle, ...topLabelStyle, left: calculateMarkerPositionOnRangeBox(filteredValueRange.min) }}>min: {Math.round(filteredValueRange.min)}</span>
+                <span style={{ ...labelStyle, ...bottomLabelStyle, left: calculateMarkerPositionOnRangeBox(filteredValueRange.max) }}>max: {Math.round(filteredValueRange.max)}</span>
+                <div style={{ ...triangleStyle, ...topTriangleStyle, left: calculateMarkerPositionOnRangeBox(filteredValueRange.min) }}></div>
+                <div style={{ ...triangleStyle, ...bottomTriangleStyle, left: calculateMarkerPositionOnRangeBox(filteredValueRange.max) }}></div>
             </Box>
         </Box>
     );
 };
-
-// Function to return an array of STEPS discrete colors in a gradient from startColor and endColor
-const generateColorGradient = (startColor, endColor, steps) => {
-    function hexToRgb(hex) {
-        // Expand shorthand form (e.g. "03F") to full form (e.g. "0033FF")
-        const shorthandRegex = /^#?([a-f\d])([a-f\d])([a-f\d])$/i;
-        hex = hex.replace(shorthandRegex, function (m, r, g, b) {
-            return r + r + g + g + b + b;
-        });
-
-        const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
-        return result ? [parseInt(result[1], 16), parseInt(result[2], 16), parseInt(result[3], 16)]
-            : [null, null, null];
-    }
-
-    function rgbToHex(r, g, b) {
-        return "#" + [r, g, b].map(x => {
-            const hex = x.toString(16);
-            return hex.length === 1 ? '0' + hex : hex;
-        }).join('');
-    }
-
-    function interpolateColor(color1, color2, factor) {
-        let result = color1.slice();
-        for (let i = 0; i < 3; i++) {
-            result[i] = Math.round(result[i] + factor * (color2[i] - color1[i]));
-        }
-        return result;
-    }
-
-    let startRGB = hexToRgb(startColor);
-    let endRGB = hexToRgb(endColor);
-    let colorArray = [];
-
-    for (let i = 0; i < steps; i++) {
-        let factor = i / (steps - 1);
-        let interpolatedColor = interpolateColor(startRGB, endRGB, factor);
-        colorArray.push(rgbToHex(...interpolatedColor));
-    }
-
-    return colorArray;
-}

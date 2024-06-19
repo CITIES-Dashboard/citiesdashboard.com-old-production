@@ -4,6 +4,7 @@ import { Box, Tabs, Tab, useMediaQuery } from '@mui/material/';
 import { TabContext } from '../ContextProviders/TabContext';
 
 import SubChart from './Subchart/SubChart';
+import { YearRangeProvider } from '../ContextProviders/YearRangeContext';
 
 const debounceMilliseconds = 100;
 
@@ -170,6 +171,8 @@ function ChartComponent({ chartData: passedChartData, chartHeight: passedChartHe
                   opacity: indexValue === index ? '1' : '0',
                   pointerEvents: indexValue === index ? 'auto' : 'none',
                   top: (index === 0) ? '' : 0,
+                  overflowX: isPortrait ? 'auto' : 'hidden',
+                  overflowY: 'hidden',
                 }}
               >
                 <SubChart
@@ -184,6 +187,7 @@ function ChartComponent({ chartData: passedChartData, chartHeight: passedChartHe
                       ? ''
                       : chartMaxHeight
                   }
+                  currentSubchart={indexValue}
                 />
               </Box>
             ))}
@@ -216,7 +220,9 @@ function ChartComponent({ chartData: passedChartData, chartHeight: passedChartHe
         overflowY: 'hidden',
       }}
     >
-      {renderedComponent}
+      <YearRangeProvider>
+        {renderedComponent}
+      </YearRangeProvider>
     </ChartStyleWrapper>
   );
 }
