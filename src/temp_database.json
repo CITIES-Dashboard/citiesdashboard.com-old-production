@@ -1,0 +1,1358 @@
+[
+  {
+    "isActive": true,
+    "id": "air-quality",
+    "title": "Air Quality and Weather",
+    "owner": "CITIESair - https://citiesair.com",
+    "chartCounts": 6,
+    "embeddedWebsite": "https://citiesair.com/nyuadmap",
+    "externalWebsite": "https://citiesair.com/dashboard/nyuad?source=cities-dashboard"
+  },
+  {
+    "isActive": true,
+    "id": "athletics-fabs-membership",
+    "title": "Athletics FABS Membership",
+    "description": "This dataset visualizes the number of unique active memberships registered in the Fitness and Athletics Booking system (FABS) by academic year (AY). For FABS, an AY starts from <b>August 1</b> of the first calendar year to <b>July 31</b> of the second calendar year. After <b>July 31</b>, all existing memberships expire and members need to register again for the next AY. FABS members can register for sport classes, reserve lockers, and book and access Athletic facilities.<br><br>While there are 11 original types of FABS accounts, our data visualizations simplify them into <b>four distinct demographic groups</b>. For detailed data of the original 11 types of FABS accounts, you can download the raw dataset. <table><thead><tr><th>Simplified demographic groups</th><th>Original type(s) of FABS accounts</th></tr></thead><tbody><tr><td>Undergraduate students</td><td>Student</td></tr><tr><td>Graduate students and Alumni</td><td>Grad student and Alumni</td></tr><tr><td>Faculty and Staff</td><td>Faculty, Staff, and Family Member</td></tr><tr><td>External and Other</td><td>Community, Contract, External Instructor, Guest, and Others</td></tr></tbody></table>",
+    "sheetId": "1mRberQXQI9uHCP_gGXgK8NfjbiA2DdQc-HH1c01eEDk",
+    "owner": "Department of Athletics",
+    "contact": "nyuad.athletics@nyu.edu",
+    "rawDataTables": [
+      {
+        "gid": 560722866
+      },
+      {
+        "gid": 337720664,
+        "query": "SELECT A, B, C, D, E, F"
+      }
+    ],
+    "charts": [
+      {
+        "title": "Number of Unique FABS Memberships",
+        "subtitle": "As the <a href='./student-population'>university population</a> continues to grow, FABS membership registrations have generally exhibited an upward trend, except for a 40% decline in AY20-21. During this period, the university introduced remote working policies and campus access restrictions to combat the COVID-19 pandemic. As a result, there was a significant decrease in Faculty and Staff together with External and Other memberships; meanwhile, undergraduate student memberships only decreased by 14% in AY20-21 as most students were allowed to stay on-campus.<br><br>From March 2020 to June 2022, access to the Fitness Center, Women's Only-Gym, Indoor and Outdoor Tracks, and the 50m Pool required advanced booking on FABS' Capacity Management portal. Thus, those who wished to use these facilities must have a FABS membership. <br><br>AY21-22 and AY22-23 saw a remarkable rebounce in the number of memberships that exceeded pre-COVID figures across all demographic categories. Notably, the number of External and Other memberships (consisting of guests and other external communities) almost quadrupled in AY21-22, following the relaxation of most COVID restrictions for indoor places.",
+        "gid": 337720664,
+        "chartType": "ComboChart",
+        "headers": 1,
+        "query": "SELECT A, B, C, D, E, F, V, W, X, Y, Z",
+        "columns": [
+          0,
+          1,
+          {
+            "role": "tooltip",
+            "type": "string",
+            "properties": {
+              "html": true
+            },
+            "sourceColumn": 6
+          },
+          2,
+          {
+            "role": "tooltip",
+            "type": "string",
+            "properties": {
+              "html": true
+            },
+            "sourceColumn": 7
+          },
+          3,
+          {
+            "role": "tooltip",
+            "type": "string",
+            "properties": {
+              "html": true
+            },
+            "sourceColumn": 8
+          },
+          4,
+          {
+            "role": "tooltip",
+            "type": "string",
+            "properties": {
+              "html": true
+            },
+            "sourceColumn": 9
+          },
+          5,
+          {
+            "role": "tooltip",
+            "type": "string",
+            "properties": {
+              "html": true
+            },
+            "sourceColumn": 10
+          }
+        ],
+        "options": {
+          "seriesSelector": {
+            "allowMultiple": true,
+            "method": "setViewColumn"
+          },
+          "curveType": "none",
+          "hAxis": {
+            "title": "Academic Year (Aug - Sep next year)"
+          },
+          "vAxis": {
+            "title": "Number of Unique FABS Memberships"
+          },
+          "seriesType": "bars",
+          "series": {
+            "4": {
+              "type": "line",
+              "lineWidth": 3,
+              "pointSize": 5
+            }
+          }
+        }
+      },
+      {
+        "title": "Percentage of Demographic Groups in FABS",
+        "subtitle": "Undergraduate students have remained the largest group of FABS in recent years, representing around two-thirds of all memberships.",
+        "gid": 337720664,
+        "query": "SELECT A, B, C, D, E, I, J, K , L",
+        "headers": 1,
+        "columns": [
+          0,
+          1,
+          {
+            "calc": "stringify",
+            "type": "string",
+            "role": "annotation",
+            "sourceColumn": 5
+          },
+          2,
+          3,
+          {
+            "calc": "stringify",
+            "type": "string",
+            "role": "annotation",
+            "sourceColumn": 7
+          },
+          4
+        ],
+        "chartType": "ColumnChart",
+        "options": {
+          "bar": {
+            "groupWidth": "40%"
+          },
+          "isStacked": "percent",
+          "vAxis": {
+            "format": "#.#%"
+          },
+          "hAxis": {
+            "title": "Academic Year (Aug - Sep next year)"
+          }
+        }
+      }
+    ]
+  },
+  {
+    "isActive": true,
+    "id": "athletic-facilities-check-in",
+    "title": "Athletic Facilities Check-in",
+    "sheetId": "1iomqWbAsG75KBxiXPn76DBVGTes1PUnmB5tA0bgG5Jw",
+    "description": "This dataset visualizes the number of check-ins throughout different Athletic facilities on campus, such as the fitness center, women's-only gym, faculty pool, 50m pool, 400m track, and indoor track. This dataset can serve as a proxy for estimating the community's fitness level and physical activity. Temporal data visualizations can help the community avoid peak times in indoor spaces and spread exercises evenly throughout the day or the week.",
+    "owner": "Department of Athletics",
+    "contact": "nyuad.athletics@nyu.edu",
+    "rawDataTables": [
+      {
+        "gid": 1993454060
+      },
+      {
+        "gid": 948552227
+      },
+      {
+        "gid": 30903651
+      }
+    ],
+    "charts": [
+      {
+        "subcharts": [
+          {
+            "subchartTitle": "All time average (2020-2024)",
+            "subchartSubtitle": "As the typical workday draws to a close at around <b>5-6pm</b> for students, faculty, and staff, this time window is the busiest period for fitness activities. There is another relatively smaller peak in the morning from 8-9am; however, its magnitude doesn't usually surpass half of the afternoon rush's. For those who prefer a quieter workout, aim for <b>early-morning or midday</b> time slots where the occupancy rate is only a quarter of the busiest time.",
+            "query": "SELECT A, H, J, K",
+            "columns": [
+              0,
+              1,
+              {
+                "role": "interval",
+                "sourceColumn": 2
+              },
+              {
+                "role": "interval",
+                "sourceColumn": 3
+              }
+            ],
+            "options": {
+              "colors": "monochromatic2Colors",
+              "series": {
+                "0": {
+                  "type": "line",
+                  "lineWidth": 3
+                }
+              },
+              "intervals": {
+                "style": "area"
+              }
+            }
+          },
+          {
+            "subchartTitle": "By year",
+            "subchartSubtitle": "Due to COVID-19 restrictions, there was a limit on how many people could be in the same facilities during 2020-2022. Take the fitness center, for example, the cap was 15 people in 2020, which was gradually loosened to 25 people in 2022.",
+            "query": "SELECT A, B, C, D, E, F",
+            "options": {
+              "seriesType": "line"
+            }
+          }
+        ],
+        "title": "Average Number of Facilities Check-in Throughout the Day",
+        "gid": 947338007,
+        "headers": 1,
+        "chartType": "LineChart",
+        "options": {
+          "vAxis": {
+            "title": "Average Hourly Number of Facilities Check-in"
+          },
+          "hAxis": {
+            "title": "Hour of the Day",
+            "slantedText": true,
+            "slantedTextAngle": 30
+          }
+        }
+      },
+      {
+        "title": "Facilities Check-in Per Week Day, Normalized to the Max Value of Each Year",
+        "subtitle": "While the number of check-ins exhibits a clear diurnal variation, it remains more stable throughout the weekdays than on the weekends. The second day of the weekend and the first work day of the week have historically been off-peak days, where attendance is around 10-30% lower than the busiest day. Interestingly, this pattern still holds even after the UAE changed its weekend days on January 1, 2022 (from Fri-Sat to Sat-Sun). 2021's off-peak days are Sat and Sun, whereas 2022's and 2023's off-peak days are Sun and Mon.",
+        "gid": 654076094,
+        "headers": 1,
+        "columns": [
+          0,
+          1,
+          {
+            "role": "tooltip",
+            "sourceColumn": 10
+          },
+          2,
+          {
+            "role": "tooltip",
+            "sourceColumn": 11
+          },
+          3,
+          {
+            "role": "tooltip",
+            "sourceColumn": 12
+          },
+          4,
+          {
+            "role": "tooltip",
+            "sourceColumn": 13
+          },
+          5,
+          {
+            "role": "tooltip",
+            "sourceColumn": 14
+          },
+          {
+            "role": "annotation",
+            "sourceColumn": 17
+          },
+          6,
+          {
+            "role": "tooltip",
+            "sourceColumn": 15
+          },
+          {
+            "role": "annotation",
+            "sourceColumn": 18
+          },
+          7,
+          {
+            "role": "tooltip",
+            "sourceColumn": 16
+          },
+          {
+            "role": "annotation",
+            "sourceColumn": 19
+          }
+        ],
+        "chartType": "ColumnChart",
+        "options": {
+          "annotations": {
+            "stem": {
+              "length": 30
+            }
+          },
+          "colors": "rainbow",
+          "vAxis": {
+            "title": "Relative Number of Check-in, Normalized to Day with the Highest Number of Each Year",
+            "format": "#.#%"
+          },
+          "hAxis": {
+            "title": "Year"
+          }
+        }
+      },
+      {
+        "title": "Total Monthly Facilities Check-in, Historical",
+        "subtitle": "This visualization shows how much fitness activity has increased since the introduction of FABS. This can be attributed to the gradual relaxation of COVID-19 restrictions and the increase in on-campus residents over the period of 2020-2023.",
+        "gid": 1045014031,
+        "headers": 1,
+        "columns": [
+          0,
+          1,
+          {
+            "role": "annotation",
+            "type": "string",
+            "sourceColumn": 2
+          },
+          3,
+          {
+            "role": "annotation",
+            "type": "string",
+            "sourceColumn": 4
+          },
+          5,
+          {
+            "role": "annotation",
+            "type": "string",
+            "sourceColumn": 6
+          },
+          7,
+          {
+            "role": "annotation",
+            "type": "string",
+            "sourceColumn": 8
+          },
+          9,
+          {
+            "role": "annotation",
+            "type": "string",
+            "sourceColumn": 10
+          }
+        ],
+        "options": {
+          "vAxis": {
+            "title": "Number of check-in per month"
+          },
+          "hAxis": {
+            "title": "Month of the Year"
+          }
+        },
+        "chartType": "ColumnChart"
+      },
+      {
+        "title": "Heat Map for the Average Hourly Number of Check-in, by Day of the Week",
+        "subtitle": "Explore them and see for yourself the differences between each year, each day of the week, and each hour.",
+        "publishedSheetId": "2PACX-1vTN1TnqxRYhVu1SXrxaQOa9S5sgpKalPyB5RpfknuBn4xwN_pafHtnF91Y96W09FNKkR271ObS2w9fC",
+        "subchartsPortrait": {
+          "gid": 1445127203,
+          "maxWidth": "350px",
+          "height": "620px",
+          "subcharts": [
+            {
+              "subchartTitle": "2024",
+              "range": "AS2:BB21"
+            },
+            {
+              "subchartTitle": "2023",
+              "range": "AH2:AQ21"
+            },
+            {
+              "subchartTitle": "2022",
+              "range": "W2:AF21"
+            },
+            {
+              "subchartTitle": "2021",
+              "range": "L2:U21"
+            },
+            {
+              "subchartTitle": "2020",
+              "range": "A2:J21"
+            }
+          ]
+        },
+        "subchartsLandscape": {
+          "gid": 729452023,
+          "maxWidth": "580px",
+          "height": "350px",
+          "subcharts": [
+            {
+              "subchartTitle": "2024",
+              "range": "A54:S64"
+            },
+            {
+              "subchartTitle": "2023",
+              "range": "A41:S51"
+            },
+            {
+              "subchartTitle": "2022",
+              "range": "A28:S38"
+            },
+            {
+              "subchartTitle": "2021",
+              "range": "A15:S25"
+            },
+            {
+              "subchartTitle": "2020",
+              "range": "A2:S12"
+            }
+          ]
+        },
+        "chartType": "GoogleSheetEmbedVisualization"
+      },
+      {
+        "title": "Heat Map for the Total Monthly Number of Check-in, by Day of the Week",
+        "subtitle": "Explore them and see for yourself the differences between each year, each day of the week, and each month.",
+        "publishedSheetId": "2PACX-1vTN1TnqxRYhVu1SXrxaQOa9S5sgpKalPyB5RpfknuBn4xwN_pafHtnF91Y96W09FNKkR271ObS2w9fC",
+        "subchartsPortrait": {
+          "gid": 309021928,
+          "maxWidth": "350px",
+          "height": "500px",
+          "subcharts": [
+            {
+              "subchartTitle": "2024",
+              "range": "AS2:BB21"
+            },
+            {
+              "subchartTitle": "2023",
+              "range": "AH2:AQ21"
+            },
+            {
+              "subchartTitle": "2022",
+              "range": "W2:AF17"
+            },
+            {
+              "subchartTitle": "2021",
+              "range": "L2:U17"
+            },
+            {
+              "subchartTitle": "2020",
+              "range": "A2:J17"
+            }
+          ]
+        },
+        "subchartsLandscape": {
+          "gid": 1248059258,
+          "maxWidth": "460px",
+          "height": "350px",
+          "subcharts": [
+            {
+              "subchartTitle": "2024",
+              "range": "A54:S64"
+            },
+            {
+              "subchartTitle": "2023",
+              "range": "A41:S51"
+            },
+            {
+              "subchartTitle": "2022",
+              "range": "A28:O38"
+            },
+            {
+              "subchartTitle": "2021",
+              "range": "A15:O25"
+            },
+            {
+              "subchartTitle": "2020",
+              "range": "A2:O12"
+            }
+          ]
+        },
+        "chartType": "GoogleSheetEmbedVisualization"
+      }
+    ]
+  },
+  {
+    "isActive": true,
+    "id": "food-waste",
+    "title": "Food Waste",
+    "sheetId": "1jQYr20b4c93RmIT4M014YY-qSC-n-qpNMysy6Oz3J6U",
+    "description": "This dataset visualizes food waste in the East Dining Hall (D2). The amount of food waste is measured by weighing the <i>plate-waste</i> (leftover food from the customers) with calibrated scales operated by the Dining service provider. Past data visualizations, such as the calendar-style monthly food waste counter at the entrance of D2, have brought about awareness among the community. Not being constrained by the crowded space of the Dining Hall, this visualization allows for a more detailed and nuanced break-down of the dataset into timeline, monthly, by-meal statistics.<br><br>The data provided here is the absolute amount of food waste. The number of transactions per meal or the number of customers who eat in D2 at each meal still need to be considered to shed light on the food waste variability over time. We are currently working with the service provider to get this data. In more detail, we aim to collect aggregate, anonymized numbers of transactions to calculate per-transaction waste.",
+    "owner": "NYUAD Dining",
+    "contact": "nyuad.dining@nyu.edu",
+    "rawDataTables": [
+      {
+        "gid": 1952244844,
+        "query": "SELECT A, B, C, D, E, F"
+      }
+    ],
+    "charts": [
+      {
+        "title": "Mean Daily Food Waste (kg) by Week",
+        "headers": 1,
+        "chartType": "ComboChart",
+        "gid": 1409006115,
+        "subcharts": [
+          {
+            "subchartTitle": "Total (3 meals)",
+            "subchartSubtitle": "From this visualization of average daily food waste by month, it is evident that the absolute amount of food waste is on the rise. This might be due to several factors:<ul><li>The loosening of COVID restrictions in 2022, which allowed more people to come back to campus</li><li>An absolute increase in the number of people eating at D2 as the student population increases year-by-year</li><li>Operational changes during the hand-over period between the catering providers (ADNH: prior to July 2022, RCS: after July 2022)</li></ul>",
+            "query": "SELECT C, N, O, P, T, U WHERE A IS NOT NULL",
+            "columns": [
+              0,
+              1,
+              {
+                "role": "interval",
+                "sourceColumn": 2
+              },
+              {
+                "role": "interval",
+                "sourceColumn": 3
+              },
+              {
+                "role": "tooltip",
+                "type": "string",
+                "properties": {
+                  "html": true
+                },
+                "sourceColumn": 4
+              },
+              {
+                "role": "annotation",
+                "type": "string",
+                "sourceColumn": 5
+              }
+            ],
+            "options": {
+              "colors": "monochromatic2Colors",
+              "seriesType": "line",
+              "series": {
+                "0": {
+                  "lineWidth": 3
+                }
+              }
+            },
+            "control": {
+              "controlType": "ChartRangeFilter",
+              "options": {
+                "filterColumnIndex": 0,
+                "ui": {
+                  "minRangeSize": 31536000000
+                }
+              }
+            }
+          },
+          {
+            "subchartTitle": "by Meal (Stacked)",
+            "subchartSubtitle": "When the data is broken down into the three constituent meals, the majority of food waste comes from lunch and dinner",
+            "query": "SELECT C, E, Q, H, R, K, S, U WHERE A IS NOT NULL",
+            "columns": [
+              0,
+              1,
+              {
+                "role": "tooltip",
+                "type": "string",
+                "properties": {
+                  "html": true
+                },
+                "sourceColumn": 2
+              },
+              3,
+              {
+                "role": "tooltip",
+                "type": "string",
+                "properties": {
+                  "html": true
+                },
+                "sourceColumn": 4
+              },
+              5,
+              {
+                "role": "tooltip",
+                "type": "string",
+                "properties": {
+                  "html": true
+                },
+                "sourceColumn": 6
+              },
+              {
+                "role": "annotation",
+                "type": "string",
+                "sourceColumn": 7
+              }
+            ],
+            "options": {
+              "seriesType": "area",
+              "isStacked": true
+            },
+            "control": {
+              "controlType": "ChartRangeFilter",
+              "options": {
+                "filterColumnIndex": 0,
+                "ui": {
+                  "minRangeSize": 31536000000
+                }
+              }
+            }
+          }
+        ],
+        "options": {
+          "hAxis": {
+            "title": "Month - Year (hover on the line chart to see week number)",
+            "gridlines": {
+              "units": {
+                "months": {
+                  "format": "MMM YYYY"
+                }
+              }
+            },
+            "minorGridlines": {
+              "count": 0
+            }
+          },
+          "vAxis": {
+            "title": "Food Waste (in Kilogram)"
+          },
+          "annotations": {
+            "stem": {
+              "length": 50
+            }
+          },
+          "intervals": {
+            "style": "area"
+          }
+        }
+      },
+      {
+        "title": "Historical Daily Food Waste (kg)",
+        "subtitle": "Interact with this calendar to explore the amount of daily food waste (desktop recommended). The unit of measurement is in kilograms of food waste.<br><br>On average, a full plate of food weighs around 0.5kg (150g for each portion of starch, protein, and vegetable), not including other side dishes. Thus, when you hover on each cell of the calendar, you can see how many full plates of food could have been saved that day (we simply multiplied the food waste kilogram figure by two).</b>",
+        "gid": 1952244844,
+        "headers": 1,
+        "chartType": "Calendar",
+        "query": "SELECT A, F, L, C, I, D, J, E, K",
+        "subcharts": [
+          {
+            "subchartTitle": "Total (3 meals)",
+            "columns": [
+              0,
+              1,
+              {
+                "role": "tooltip",
+                "type": "string",
+                "properties": {
+                  "html": true
+                },
+                "sourceColumn": 2
+              }
+            ],
+            "options": {
+              "colorAxis": {
+                "isGradient": true,
+                "colors": "default",
+                "gradientSteps": 20
+              }
+            }
+          },
+          {
+            "subchartTitle": "Breakfast",
+            "columns": [
+              0,
+              3,
+              {
+                "role": "tooltip",
+                "type": "string",
+                "properties": {
+                  "html": true
+                },
+                "sourceColumn": 4
+              }
+            ],
+            "options": {
+              "colorAxis": {
+                "isGradient": true,
+                "colors": "matchingColor",
+                "colorIndex": 0,
+                "gradientSteps": 20
+              }
+            }
+          },
+          {
+            "subchartTitle": "Lunch",
+            "columns": [
+              0,
+              5,
+              {
+                "role": "tooltip",
+                "type": "string",
+                "properties": {
+                  "html": true
+                },
+                "sourceColumn": 6
+              }
+            ],
+            "options": {
+              "colorAxis": {
+                "isGradient": true,
+                "colors": "matchingColor",
+                "colorIndex": 1,
+                "gradientSteps": 20
+              }
+            }
+          },
+          {
+            "subchartTitle": "Dinner",
+            "columns": [
+              0,
+              7,
+              {
+                "role": "tooltip",
+                "type": "string",
+                "properties": {
+                  "html": true
+                },
+                "sourceColumn": 8
+              }
+            ],
+            "options": {
+              "colorAxis": {
+                "isGradient": true,
+                "colors": "matchingColor",
+                "colorIndex": 2,
+                "gradientSteps": 20
+              }
+            }
+          }
+        ]
+      },
+      {
+        "title": "Percentage of Food Waste By Meal",
+        "subtitle": "Lunch and dinner make up the majority of the food waste in D2. Each accounts for roughly two-fifths of the total waste for a given day.",
+        "gid": 387300968,
+        "headers": 1,
+        "chartType": "ColumnChart",
+        "columns": [
+          0,
+          4,
+          {
+            "calc": "stringify",
+            "type": "string",
+            "role": "annotation",
+            "sourceColumn": 4
+          },
+          5,
+          {
+            "calc": "stringify",
+            "type": "string",
+            "role": "annotation",
+            "sourceColumn": 5
+          },
+          6,
+          {
+            "calc": "stringify",
+            "type": "string",
+            "role": "annotation",
+            "sourceColumn": 6
+          }
+        ],
+        "options": {
+          "isStacked": true,
+          "vAxis": {
+            "title": "Percentage",
+            "format": "#.#%"
+          },
+          "hAxis": {
+            "title": "Quarter - Year"
+          }
+        }
+      },
+      {
+        "title": "Mean Food Waste (kg) by Day of the Week, with 1 Standard Deviation",
+        "subtitle": "Each year, the amount of food wastage is essentially constant among different days of the week",
+        "subcharts": [
+          {
+            "gid": 635067311,
+            "subchartTitle": "Total (3 meals)"
+          },
+          {
+            "gid": 1112965050,
+            "subchartTitle": "Breakfast"
+          },
+          {
+            "gid": 825083155,
+            "subchartTitle": "Lunch"
+          },
+          {
+            "gid": 1561192646,
+            "subchartTitle": "Dinner"
+          }
+        ],
+        "query": "SELECT A, E, F, G, H, I, J, K, L, M, N, O, P, Q, R, S, T, U, V, B, C, D LIMIT 3",
+        "headers": 1,
+        "chartType": "ColumnChart",
+        "columns": [
+          0,
+          1,
+          {
+            "role": "interval",
+            "sourceColumn": 2
+          },
+          {
+            "role": "interval",
+            "sourceColumn": 3
+          },
+          4,
+          {
+            "role": "interval",
+            "sourceColumn": 5
+          },
+          {
+            "role": "interval",
+            "sourceColumn": 6
+          },
+          7,
+          {
+            "role": "interval",
+            "sourceColumn": 8
+          },
+          {
+            "role": "interval",
+            "sourceColumn": 9
+          },
+          10,
+          {
+            "role": "interval",
+            "sourceColumn": 11
+          },
+          {
+            "role": "interval",
+            "sourceColumn": 12
+          },
+          13,
+          {
+            "role": "interval",
+            "sourceColumn": 14
+          },
+          {
+            "role": "interval",
+            "sourceColumn": 15
+          },
+          16,
+          {
+            "role": "interval",
+            "sourceColumn": 17
+          },
+          {
+            "role": "interval",
+            "sourceColumn": 18
+          },
+          19,
+          {
+            "role": "interval",
+            "sourceColumn": 20
+          },
+          {
+            "role": "interval",
+            "sourceColumn": 21
+          }
+        ],
+        "options": {
+          "colors": "rainbow",
+          "bar": {
+            "groupWidth": "40%"
+          },
+          "intervals": {
+            "style": "bars"
+          },
+          "vAxis": {
+            "title": "Food Waste (in Kilogram)",
+            "maxValue": 100
+          },
+          "hAxis": {
+            "title": "Year",
+            "format": "",
+            "minorGridlines": {
+              "count": 0
+            }
+          }
+        }
+      }
+    ]
+  },
+  {
+    "isActive": true,
+    "id": "printing-and-copying",
+    "title": "Printing & Copying",
+    "sheetId": "1O1X73cSXO1lQuiQ1lj7d9QdE3KgdIufFlurmAPeI1ek",
+    "description": "This dataset visualizes printing and copying activities at NYUAD. It tracks the usage of black and white (B/W) and color printing data across various paper sizes like A3 and A4, segmented by different user categories. The visualizations offers a detailed breakdown including time trends and user category comparisons.<br><br>While there are 10+ original types of printing accounts, our data visualizations simplify them into <b>four distinct demographic groups</b>. For detailed data of the original types of printing accounts, you can download the raw dataset. <table><thead><tr><th>Simplified groups</th><th>Original types of printing accounts</th></tr></thead><tbody><tr><td>Student</td><td>admitted_student, legacy_student, degree, student_applicant, student on leave, abu_dhabi_smsp, account_sponsored_student</td></tr><tr><td>Faculty and Researcher</td><td>adjunct faculty, faculty, researcher, research_affiliate, retired faculty, visiting_academic_other, visiting_scholar, account_sponsored_staff</td></tr><tr><td>Staff</td><td>ad_contingent, ad_employee_of_vendor, administrator, contractor, employee_of_vendor, prospective_employee, security_staff</td></tr><tr><td>Others</td><td>ad_executive_authority, employee_family_member, nyu_building_resident, account_sponsored_retiree, program_affiliate_other, nyu_commercial_tenant, unknown</td></tr></tbody></table>",
+    "owner": "NYUAD IT",
+    "contact": "nyuad.it@nyu.edu",
+    "rawDataTables": [
+      {
+        "gid": 1304606517
+      }
+    ],
+    "charts": [
+      {
+        "title": "Total Number of Pages by User Category by Month",
+        "headers": 1,
+        "chartType": "ComboChart",
+        "gid": 1705611582,
+        "subcharts": [
+          {
+            "subchartTitle": "Total Per User Category",
+            "subchartSubtitle": "<p>The graph above presents a monthly analysis of the total number of pages consumed by different user categories. <b>Faculty & Researcher</b> and <b>Student</b> are the two biggest contributors in campus' paper usage, followed by <b>Staff</b> and <b>Others</b>. </p><p>Additionally, the visualization highlights fluctuations in overall paper consumption across <b>All Categories</b>, represented by the grey line, with the highest usage occurring during the academic semesters, exceeding <b>270,000 pages</b> printed per month. There is also a noticeable decrease of usage during winter and summer breaks, with the lowest months clocking in at only around <b>1/4</b> of peak-usage months. This pattern underscores the direct impact of academic cycles on paper consumption behaviors across different user groups.</p>",
+            "columns": [
+              0,
+              1,
+              8,
+              15,
+              22,
+              29
+            ],
+            "options": {
+              "seriesSelector": {
+                "allowMultiple": true,
+                "method": "setViewColumn"
+              },
+              "toggleStackedBars": true,
+              "isStacked": true,
+              "seriesType": "bars",
+              "series": {
+                "4": {
+                  "type": "line",
+                  "lineWidth": 3,
+                  "pointSize": 5
+                }
+              },
+              "bar": {
+                "groupWidth": "40%"
+              },
+              "vAxis": {
+                "title": "Number of Pages (in Thousands)",
+                "format": "short"
+              }
+            }
+          },
+          {
+            "subchartTitle": "Percentage by User Category",
+            "subchartSubtitle": "<p>This stacked bar graph illustrates the <b>distribution</b> of paper consumption among four distinct user categories on a month-by-month basis since September 2022. <b>Faculty & Researcher</b> consistently represents the largest group of paper usage, accounting for around 30% - 40% of all papers printed. <b>Student</b> follows closely behind. <b>Staff</b>, although representing a lower proportion than the previous two demographic groups during most months, exhibits a surge during the summer months from June to August, where their usage exceeds 60% of the entire university, surpassing all other categories. This is due to the majority of the student body not residing on campus during such periods. <b>Others</b> consistently shows the smallest portion of usage across all months, only accounting for 5 - 10% of all papers printed.</p>",
+            "columns": [
+              0,
+              1,
+              8,
+              15,
+              22
+            ],
+            "options": {
+              "seriesType": "bars",
+              "bar": {
+                "groupWidth": "40%"
+              },
+              "isStacked": "percent",
+              "vAxis": {
+                "title": "Percentage",
+                "format": "#.#%"
+              }
+            }
+          }
+        ],
+        "options": {
+          "hAxis": {
+            "title": "Month - Year",
+            "minorGridlines": {
+              "count": 0
+            }
+          }
+        },
+        "control": {
+          "controlType": "ChartRangeFilter",
+          "options": {
+            "filterColumnIndex": 0,
+            "ui": {
+              "minRangeSize": 7884000000
+            }
+          }
+        }
+      },
+      {
+        "title": "Boxplot Distribution of Pages Printed by User Category by Month",
+        "headers": 1,
+        "chartType": "BarChart",
+        "gid": 1705611582,
+        "query": "SELECT * ORDER BY A DESC",
+        "subchartTitle": "Median and Mean Per User Category",
+        "subtitle": "<p>These boxplots illustrate the distribution of pages printed by different user categories, showcasing data variability on a month-by-month basis via <b>a controllable slider</b>. For each category, the large dot represents the mean (average) number of pages printed by a user from that category, while the line inside each box marks the median, the box marks the 25th and 75th percentile, and the whiskers represent min and max values. More information on how to read a boxplot can be found <a href='https://en.wikipedia.org/wiki/Box_plot'>here</a>.</p><p>Consistently across all user categories, the mean is higher than the median, indicating a right-skewed distribution. This suggests that within each user category, <b>there are outliers or a subset of heavy users who print significantly more pages than the average person</b>, thereby pulling the mean upwards. <b>Faculty & Researcher</b> category, in particular, exhibits the greatest spread, highlighting a broad range of printing behaviors, from minimal to very high usage. The presence of such skewness across all categories indicates that a majority of users print a moderate number of pages, but the overall average is much higher, caused by few individuals printing large quantities.</p>",
+        "columns": [
+          36,
+          7,
+          {
+            "role": "tooltip",
+            "type": "string",
+            "properties": {
+              "html": true
+            },
+            "sourceColumn": 37
+          },
+          {
+            "role": "interval",
+            "id": "iqr1",
+            "sourceColumn": 4
+          },
+          {
+            "role": "interval",
+            "id": "iqr1",
+            "sourceColumn": 3
+          },
+          {
+            "role": "interval",
+            "id": "iqr2",
+            "sourceColumn": 3
+          },
+          {
+            "role": "interval",
+            "id": "iqr2",
+            "sourceColumn": 5
+          },
+          {
+            "role": "interval",
+            "id": "min",
+            "sourceColumn": 6
+          },
+          {
+            "role": "interval",
+            "id": "min",
+            "sourceColumn": 4
+          },
+          {
+            "role": "interval",
+            "id": "max",
+            "sourceColumn": 5
+          },
+          {
+            "role": "interval",
+            "id": "max",
+            "sourceColumn": 7
+          },
+          {
+            "role": "interval",
+            "id": "avg",
+            "sourceColumn": 2
+          },
+          14,
+          {
+            "role": "tooltip",
+            "type": "string",
+            "properties": {
+              "html": true
+            },
+            "sourceColumn": 38
+          },
+          {
+            "role": "interval",
+            "id": "iqr1",
+            "sourceColumn": 11
+          },
+          {
+            "role": "interval",
+            "id": "iqr1",
+            "sourceColumn": 10
+          },
+          {
+            "role": "interval",
+            "id": "iqr2",
+            "sourceColumn": 10
+          },
+          {
+            "role": "interval",
+            "id": "iqr2",
+            "sourceColumn": 12
+          },
+          {
+            "role": "interval",
+            "id": "min",
+            "sourceColumn": 13
+          },
+          {
+            "role": "interval",
+            "id": "min",
+            "sourceColumn": 11
+          },
+          {
+            "role": "interval",
+            "id": "max",
+            "sourceColumn": 12
+          },
+          {
+            "role": "interval",
+            "id": "max",
+            "sourceColumn": 14
+          },
+          {
+            "role": "interval",
+            "id": "avg",
+            "sourceColumn": 9
+          },
+          21,
+          {
+            "role": "tooltip",
+            "type": "string",
+            "properties": {
+              "html": true
+            },
+            "sourceColumn": 39
+          },
+          {
+            "role": "interval",
+            "id": "iqr1",
+            "sourceColumn": 18
+          },
+          {
+            "role": "interval",
+            "id": "iqr1",
+            "sourceColumn": 17
+          },
+          {
+            "role": "interval",
+            "id": "iqr2",
+            "sourceColumn": 17
+          },
+          {
+            "role": "interval",
+            "id": "iqr2",
+            "sourceColumn": 19
+          },
+          {
+            "role": "interval",
+            "id": "min",
+            "sourceColumn": 20
+          },
+          {
+            "role": "interval",
+            "id": "min",
+            "sourceColumn": 18
+          },
+          {
+            "role": "interval",
+            "id": "max",
+            "sourceColumn": 19
+          },
+          {
+            "role": "interval",
+            "id": "max",
+            "sourceColumn": 21
+          },
+          {
+            "role": "interval",
+            "id": "avg",
+            "sourceColumn": 16
+          },
+          28,
+          {
+            "role": "tooltip",
+            "type": "string",
+            "properties": {
+              "html": true
+            },
+            "sourceColumn": 40
+          },
+          {
+            "role": "interval",
+            "id": "iqr1",
+            "sourceColumn": 25
+          },
+          {
+            "role": "interval",
+            "id": "iqr1",
+            "sourceColumn": 24
+          },
+          {
+            "role": "interval",
+            "id": "iqr2",
+            "sourceColumn": 24
+          },
+          {
+            "role": "interval",
+            "id": "iqr2",
+            "sourceColumn": 26
+          },
+          {
+            "role": "interval",
+            "id": "min",
+            "sourceColumn": 27
+          },
+          {
+            "role": "interval",
+            "id": "min",
+            "sourceColumn": 25
+          },
+          {
+            "role": "interval",
+            "id": "max",
+            "sourceColumn": 26
+          },
+          {
+            "role": "interval",
+            "id": "max",
+            "sourceColumn": 28
+          },
+          {
+            "role": "interval",
+            "id": "avg",
+            "sourceColumn": 23
+          },
+          35,
+          {
+            "role": "tooltip",
+            "type": "string",
+            "properties": {
+              "html": true
+            },
+            "sourceColumn": 41
+          },
+          {
+            "role": "interval",
+            "id": "iqr1",
+            "sourceColumn": 32
+          },
+          {
+            "role": "interval",
+            "id": "iqr1",
+            "sourceColumn": 31
+          },
+          {
+            "role": "interval",
+            "id": "iqr2",
+            "sourceColumn": 31
+          },
+          {
+            "role": "interval",
+            "id": "iqr2",
+            "sourceColumn": 33
+          },
+          {
+            "role": "interval",
+            "id": "min",
+            "sourceColumn": 34
+          },
+          {
+            "role": "interval",
+            "id": "min",
+            "sourceColumn": 32
+          },
+          {
+            "role": "interval",
+            "id": "max",
+            "sourceColumn": 33
+          },
+          {
+            "role": "interval",
+            "id": "max",
+            "sourceColumn": 35
+          },
+          {
+            "role": "interval",
+            "id": "avg",
+            "sourceColumn": 30
+          }
+        ],
+        "options": {
+          "bar": {
+            "groupWidth": "100%"
+          },
+          "dataOpacity": 0,
+          "interval": {
+            "iqr1": {
+              "style": "boxes",
+              "lineWidth": 2
+            },
+            "iqr2": {
+              "style": "boxes",
+              "lineWidth": 2
+            },
+            "min": {
+              "style": "sticks",
+              "lineWidth": 2
+            },
+            "max": {
+              "style": "sticks",
+              "lineWidth": 2
+            },
+            "avg": {
+              "style": "points",
+              "pointSize": 10,
+              "fillOpacity": 1
+            }
+          },
+          "seriesType": "bars",
+          "vAxis": {
+            "textPosition": "none"
+          },
+          "hAxis": {
+            "title": "Number of Pages",
+            "minorGridlines": {
+              "count": 0
+            }
+          }
+        },
+        "control": {
+          "controlType": "CategoryFilter",
+          "options": {
+            "isSlider": true,
+            "filterColumnIndex": 36,
+            "ui": {
+              "label": "Filter by Month: ",
+              "allowTyping": false,
+              "allowNone": false,
+              "allowMultiple": false,
+              "sortValues": false
+            }
+          }
+        }
+      },
+      {
+        "title": "Compositions of Page Type by User Category (Since Sep 2022)",
+        "headers": 1,
+        "chartType": "HeatMap",
+        "nivo": true,
+        "gid": 2096148199,
+        "subtitle": "The two heat-maps above visualize the total usage of various paper types by different user categories at NYU Abu Dhabi, <b>since September 2022</b>. Each cell's color corresponds to the volume of pages used, with darker shades indicating higher usage.<br><br>",
+        "subcharts": [
+          {
+            "subchartTitle": "Grouped by User Category",
+            "subchartSubtitle": "In this first heatmap, page usage has been visualized as a percentage of the total number of pages used by <b>each user category</b>. A marked preference for <b>B/W A4</b> pages is evident among Student, Faculty & Researcher, and Others, representing approximately <b>60-70%</b> of their respective total paper usages. Conversely, Staff exhibited a strong preference for <b>color A4 pages</b>.",
+            "tooltipFormat": "<span><strong>{columnCategory}</strong>: {y}<br />{percentage} of {rowOrColTotal} pages used by {rowCategory}</span>",
+            "options": {
+              "nivoHeatMap": {
+                "yInnerPadding": 0.2,
+                "hoverTarget": "row"
+              }
+            }
+          },
+          {
+            "subchartTitle": "Grouped by Page Type",
+            "subchartSubtitle": "In this second heatmap, page usage is visualized as a percentage of all pages used for <b>each type of paper</b>. Student and Faculty & Researcher together account for approximately <b>80%</b> of all B/W A4 pages, signifying their substantial reliance on standard black and white documents for academic purposes. In contrast, Staff displays a pronounced preference for color documents, utilizing more than <b>40%</b> of both <b>A3 and A4 color pages</b>.<br><br>Notably, both Student and Staff use a much greater quantity of <b>A3 pages</b> — both in color and B/W — compared to Faculty & Researcher. This suggests they are more frequently involved in creating larger format materials, such as posters for events and presentations, which require the visibility and impact that larger page sizes provide.",
+            "tooltipFormat": "<span><strong>{rowCategory}</strong>: {y}<br />{percentage} of {rowOrColTotal} {columnCategory} pages used</span>",
+            "options": {
+              "nivoHeatMap": {
+                "xInnerPadding": 0.2,
+                "hoverTarget": "column"
+              }
+            }
+          }
+        ],
+        "options": {
+          "nivoHeatMap": {
+            "xOuterPadding": 0.05,
+            "yOuterPadding": 0.05,
+            "legends": [
+              {
+                "title": "Number of Pages"
+              }
+            ]
+          }
+        }
+      }
+    ]
+  },
+  {
+    "isActive": false,
+    "id": "noise-pollution",
+    "title": "Noise Pollution",
+    "sheetId": "",
+    "description": "",
+    "owner": "CITIES Research",
+    "contact": "cities.nyuad@nyu.edu",
+    "rawDataTables": [
+      {}
+    ],
+    "charts": []
+  }
+]
